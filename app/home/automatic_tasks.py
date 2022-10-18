@@ -120,7 +120,7 @@ def setFirstStat(user_id, prices):
 
 def update_influencers():
     print("UPDATING INFLUENCERS")
-    
+
     with app.app_context():
         influencers = {}
         influencers_followed = Follower.query.filter(Follower.following==True)
@@ -153,6 +153,7 @@ def update_influencers():
 
 
 def scheduleTask():
+    print("I AM A SCHEDULED TASK\n" * 15)
     try:
         with app.app_context():
             tweets_to_collect = Tweet.query.filter(Tweet.token_price_collection_complete==False).all()

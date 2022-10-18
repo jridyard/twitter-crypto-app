@@ -112,7 +112,9 @@ class Tweet(db.Model):
     pair_id = Column(String(255), unique=False)
     token_name = Column(String(255), unique=False)
     price_at_tweet = Column(Float(), unique=False)
-    prices = Column(JSON, unique=False) # filled out with hourly prices => {1: 2.78, 2: 3.23, 3: 2.82, ... 24: 5.53}
+    prices = Column(JSON, unique=False, default={
+        '0': None, '1': None, '2': None, '3': None, '4': None, '12': None, '24': None
+    }) # filled out with hourly prices => {1: 2.78, 2: 3.23, 3: 2.82, ... 24: 5.53}
     token_price_collection_complete = Column(Boolean, unique=False)
     collection_attempts = Column(Integer, unique=False, default=0)
 

@@ -303,7 +303,7 @@ body.white-content .bootstrap-switch .bootstrap-switch-handle-on,  body.white-co
           "tweet":            `<a href="https://twitter.com/${tweeter_name}/status/${tweet_id}" tweet-data="${ actual_tweet }" target="_blank">${ actual_tweet.slice(0, 30) }${ actual_tweet.length >= 30 ? '...' : ''}</a>`,
           "token":            `<a href="https://www.defined.fi/eth/${ token_id }" token-id="${ token_id }" target="_blank"> ${ token_name } </a>`,
           "number_of_calls":  window.calledInLastHour[ i ] ? `<span class=\"#-calls-${ token_id }\"><b>${ callsNum }</b> &nbsp; ${ callsNum < 5 ? '🔥' : callsNum < 15 ? '🔥🔥' : '🔥🔥🔥'}</span>` : "❄️",
-          "price_change": `<span price-data=${ JSON.stringify(priceChanges) } class="price-changes">${ priceChanges['1'] }%</span>`
+          "price_change": `<span price-data=${ JSON.stringify(priceChanges) } class="price-changes">${ !isNaN(priceChanges['1']) ? priceChanges['1'] + "%" : '-' }</span>`
         })
 
       }
@@ -617,7 +617,7 @@ table.dataTable tr.dt-hasChild td.dt-control:before {
         const priceChangeData = $(element).attr('price-data')
         const priceChanges = JSON.parse(priceChangeData)
         const priceChange = priceChanges[targetHour]
-        element.textContent = (priceChange !== null && priceChange !== undefined) ? (priceChange.toString() + "%" + (priceChange < 5 ? '' : priceChange < 15 ? ' 🔥' : priceChange < 25 ? ' 🔥🔥' : ' 🔥🔥🔥')) : '-'
+        element.textContent = (priceChange !== null && priceChange !== undefined && !isNaN(priceChange)) ? (priceChange.toString() + "%" + (priceChange < 5 ? '' : priceChange < 15 ? ' 🔥' : priceChange < 25 ? ' 🔥🔥' : ' 🔥🔥🔥')) : '-'
       })
     })
     

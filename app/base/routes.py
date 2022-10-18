@@ -31,13 +31,13 @@ from app.base.util import verify_pass
 
 @blueprint.route('/base/blueprint')
 def route_default():
-    return redirect(url_for('home.index'))
+    return redirect(url_for('home.influencers'))
 
 
 @blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('home.index'))
+    return redirect(url_for('home.influencers'))
 
 ## Errors
 
@@ -78,7 +78,7 @@ def login():
         if user and verify_pass( password, user.password):
 
             login_user(user)
-            return redirect(url_for('home.index'))
+            return redirect(url_for('home.influencers'))
 
         # Something (user or pass) is not ok
         return render_template( 'accounts/login.html', msg='Wrong user or password', form=login_form)
@@ -87,7 +87,7 @@ def login():
         return render_template( 'accounts/login.html',
                                 form=login_form)
 
-    return redirect(url_for('home.index'))
+    return redirect(url_for('home.influencers'))
 
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
@@ -189,7 +189,7 @@ def register():
             if user and verify_pass( password, user.password):
 
                 login_user(user)
-                return redirect(url_for('home.index') + "#new-user")
+                return redirect(url_for('home.influencers') + "#new-user")
 
     else:
         return render_template( 'accounts/register.html', form=create_account_form) #accounts/register.html'
