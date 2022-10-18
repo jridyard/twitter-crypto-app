@@ -249,7 +249,7 @@ body.white-content .bootstrap-switch .bootstrap-switch-handle-on,  body.white-co
 <script>
   async function getTweetData() {
 
-    const tweets_list = await fetch('http://localhost:1111/api/get_tweets').then(data => data.json()).then(res => { return res['tweet_list'] })
+    const tweets_list = await fetch(`${location.protocol}//${location.host}/api/get_tweets`).then(data => data.json()).then(res => { return res['tweet_list'] })
 
       window.tweet_count = {}
       window.calledInLastHour = {}
@@ -364,7 +364,7 @@ function roundTo(n, digits) {
 
   async function checkNewTweets() {
     const new_tweet_data = await fetch_get (
-      FETCH_URL = 'http://localhost:1111/api/check_tweets'
+      FETCH_URL = `${location.protocol}//${location.host}/api/check_tweets`
     )
 
     if (new_tweet_data.response == "New Tweet") {

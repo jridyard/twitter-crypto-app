@@ -183,7 +183,7 @@
         window.influencersTable.rows($('table tr').has('input:checked')).remove().draw();
 
         let promises = influencers_to_remove.map(async (influencer_id_to_remove, iteration) => {
-          await fetch(`http://localhost:1111/api/unfollow_influencer`, {
+          await fetch(`${location.protocol}//${location.host}/api/unfollow_influencer`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -215,7 +215,7 @@
 
                   let promises = new_influencers_comma_seperated.map(async (influencer_handle, iteration) => {
                     try {
-                      var response_data = await fetch('http://localhost:1111/api/add_influencer', {
+                      var response_data = await fetch(`${location.protocol}//${location.host}/api/add_influencer`, {
                           method: 'POST',
                           headers: {
                               'Content-Type': 'application/json'
@@ -347,7 +347,7 @@ function roundTo(n, digits) {
 <script>
   async function getInfluencers() {
 
-    const following_list = await fetch('http://localhost:1111/api/get_followers').then(data => data.json()).then(res => { return res['follower_list'] })
+    const following_list = await fetch(`${location.protocol}//${location.host}/api/get_followers`).then(data => data.json()).then(res => { return res['follower_list'] })
 
     var following_data = []
 
