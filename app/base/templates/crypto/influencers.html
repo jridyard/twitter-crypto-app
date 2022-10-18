@@ -1,0 +1,522 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tables Extended {% endblock title %}
+
+<!-- jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+
+
+  .activate-license-button {
+    padding: 8px 15px !important;
+    border-radius: 30px;
+    margin-right: 20px;
+  }
+
+  .deactivate-license-button {
+    padding: 8px 20px !important;
+    border-radius: 30px;
+    margin-right: 20px;
+
+  }
+
+  .discord-auth-link {
+    font-size: 1rem;
+    color: white;
+  }
+
+  .discord-auth-link:hover {
+    color: rgba(255, 255, 255, 0.671);
+  }
+
+  .card-stats .info-icon i {
+      color: #ffffff;
+      font-size: 1.7em;
+      padding: 14px 9px;
+  }
+
+  .card-stats .info-icon.icon-warning {
+      background: #5865f2 !important;
+      /* background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72); */
+      background-size: 210% 210%;
+      background-position: top right;
+  }
+
+  .no-overflow {
+    overflow-x: hidden !important;
+  }
+
+  .card-button-footer {
+    margin: 10px;
+  }
+
+.discord-button {
+  background: #5865f2 !important
+}
+
+.discord-button:hover {
+  background: #4553ee !important
+}
+
+.discord-button:focus {
+  background: #5f6bf0 !important
+}
+
+.discord-button:active {
+  background: #5f6bf0 !important
+}
+</style>
+
+
+
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="tools float-right">
+            <div class="dropdown">
+              <button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon" data-toggle="dropdown">
+                <i class="tim-icons icon-settings-gear-63" style="font-size: 1.6em;"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item text-danger" href="#" id="remove-influencers">Unfollow Influencers</a>
+              </div>
+            </div>
+          </div>
+          <h4 class="card-title">
+            <button type='button' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' id="add_influencers_btn">
+              <!-- Finish -->
+              <span id="finish_text">+ New Influencers</span>
+              <div id="loading_outer">
+                <div id="finish_loading" style="display: none;" class="dot-flashing"></div>
+              </div>
+            </button>
+          </h4>
+          <div class="col-lg-3 col-md-3 col-sm-3">
+            <h5>Average Performance Over...</h5>
+            <select class="selectpicker" data-size="7" data-style="btn btn-primary" title="Single Select" id="performance_period">
+              <option selected value="1">1h</option>
+              <option value="2">2h</option>
+              <option value="3">3h</option>
+              <option value="4">4h</option>
+              <option value="12">12h</option>
+              <option value="24">24h</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sortable table-striped" data-toggle="table" data-sort-name="date" data-sort-order="desc" id="example">
+              <thead class="text-primary">
+                <tr>
+                  <th class="text-center">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" checked="" id="influencer-checkbox-header-input">
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </div>
+                  </th>
+                  <th>
+                    Influencer
+                  </th>
+                  <th>
+                    Twitter
+                  </th>
+                  <th>
+                    Followers
+                  </th>
+                  <th>
+                    Tokens Tweeted
+                  </th>
+                  <th>
+                    Average Performance (<span id="thead-performance-span">1h</span>)
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="purchasers_table_body">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+<script>
+  //   ↓↓↓   MANAGE ON OFF FOR ALL CHECKBOXES FROM MAIN HEADER BOX   ↓↓↓   \\
+  
+  function addControlListeners() {
+
+    $('table').on('change', () => {
+      const areAllChecked = $('table tr').has('input.influencer-checkbox:checked').length === $('table tr').has('input.influencer-checkbox').length ? true : false
+      $('#influencer-checkbox-header-input').prop('checked', areAllChecked)
+    })
+
+    document.querySelector('#influencer-checkbox-header-input').addEventListener('change', (e) => {
+        var current_target = e.currentTarget
+        var isChecked = current_target.checked
+        $('.influencer-checkbox').prop('checked', isChecked)
+    });
+
+    document.querySelector('#remove-influencers').addEventListener('click', async (e) => {
+        
+        const checked_influencers = $('.influencer-checkbox:checked')
+        var influencers_to_remove = []
+
+        for (var i=0; i < checked_influencers.length; i++) {
+          
+          var influencer_id = checked_influencers[i].getAttribute('influencer-id')
+          influencers_to_remove.push( influencer_id )
+          
+        }
+
+        window.influencersTable.rows($('table tr').has('input:checked')).remove().draw();
+
+        let promises = influencers_to_remove.map(async (influencer_id_to_remove, iteration) => {
+          await fetch(`http://localhost:1111/api/unfollow_influencer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'user_id': influencer_id_to_remove
+            })
+          })
+        })
+        await Promise.all(promises)
+
+    });
+
+
+    document.querySelector('#add_influencers_btn').addEventListener('click', async () => {
+
+          await Swal.fire({
+              input: 'textarea',
+              inputLabel: 'Add Influencers',
+              inputPlaceholder: 'Paste new influencers here...',
+              inputAttributes: {
+                'aria-label': 'Paste new influencers here...'
+              },
+              showCancelButton: true,
+              preConfirm: async (new_influencers) => {
+
+                  const new_influencers_comma_seperated = new_influencers.split('\n')
+                  var responses = []
+
+                  let promises = new_influencers_comma_seperated.map(async (influencer_handle, iteration) => {
+                    try {
+                      var response_data = await fetch('http://localhost:1111/api/add_influencer', {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            'handle': influencer_handle
+                          })
+                      }).then(data => data.json()).then(res => { return res })
+
+                      if (response_data.follower_data) responses.push(response_data.follower_data)
+                    }
+                    catch (err) { /*( supress )*/ }
+
+                  })
+                  await Promise.all(promises)
+
+                  return responses
+                  // return fetch(`//api.github.com/users/${new_influencers}`)
+                  // .then(response => {
+                  //     if (!response.ok) {
+                  //         throw new Error(response.statusText)
+                  //     }
+                  //     return response.json()
+                  // })
+                  // .catch(error => {
+                  //     Swal.showValidationMessage(
+                  //         `Request failed: ${error}`
+                  //     )
+                  // })
+              },
+              allowOutsideClick: () => !Swal.isLoading()
+            }).then(async (result) => {
+
+              if (result.isConfirmed) {
+
+                  var influencers_added = result.value
+
+                  var influencer_table_data_to_add = []
+
+                  for (var i=0; i < influencers_added.length; i++) {
+                    
+                    const influencer_added = influencers_added[i]
+
+                    influencer_table_data_to_add.push({
+                      'toggle':
+                        `
+                          <div class="form-check" style="right: 10px;">
+                            <label class="form-check-label">
+                              <input class="form-check-input influencer-checkbox" type="checkbox" checked="" influencer-id="${ influencer_added.user_id }">
+                              <span class="form-check-sign"></span>
+                            </label>
+                          </div>
+                        `,
+                      'influencer': `<a href="/influencer/${ influencer_added.internal_id }">${ influencer_added.name }</a>`,
+                      'Twitter': `<a href="https://www.twitter.com/${ influencer_added.screen_name }" target="_blank"><button class="btn btn-icon btn-round btn-twitter"> <i class="fab fa-twitter"></i> </button></a> @${ influencer_added.screen_name } `,
+                      'followers': numberWithCommas(influencer_added.follower_count),
+                      'tokens_tweeted': 0,
+                      'average_performance': '-'
+                    })
+                    
+                  }
+
+                  window.influencersTable.rows.add( influencer_table_data_to_add ).draw()
+
+                  Swal.fire(
+                      'Influencers have been added!',
+                      'Their tweets will start being tracked as of midnight tonight.',
+                      'success'
+                  )
+
+              }
+          })
+      });
+
+  }
+
+  
+//   ↑↑↑   MANAGE ON OFF FOR ALL CHECKBOXES FROM MAIN HEADER BOX   ↑↑↑   \\
+
+document.querySelector('#performance_period').addEventListener('change', (e) => {
+    var current_target = e.currentTarget
+    const targetHour = current_target.value
+    $('#thead-performance-span').text(targetHour + "H")
+    $('.performance-stats').each((index, element) => {
+      const priceChangeData = $(element).attr('performance-data')
+      const priceChanges = JSON.parse(priceChangeData)
+      const priceChange = priceChanges[targetHour]
+      element.textContent = (priceChange !== null && priceChange !== undefined) ? (priceChange.toString() + "%" + (priceChange < 5 ? '' : priceChange < 15 ? ' 🔥' : priceChange < 25 ? ' 🔥🔥' : ' 🔥🔥🔥')) : '-'
+    })
+})
+
+
+function roundTo(n, digits) {
+  if (digits === undefined) digits = 0;
+  var multiplicator = Math.pow(10, digits);
+  n = parseFloat((n * multiplicator).toFixed(11));
+  var test =(Math.round(n) / multiplicator);
+  return +(test.toFixed(digits));
+}
+</script>
+
+<style>
+  .btn.btn-icon, .navbar .navbar-nav > a.btn.btn-icon {
+    height: 1.375rem;
+    min-width: 1.375rem;
+    width: 1.375rem;
+    padding: 0;
+    font-size: .65rem;
+    overflow: hidden;
+    position: relative;
+    line-height: normal;
+}
+
+.btn.btn-twitter {
+    background: #55acee !important;
+    background-size: 210% 210%;
+    background-position: top right;
+    color: #ffffff;
+    background-size: 210% 210%;
+    background-position: top right;
+    background-repeat: space;
+}
+
+.fa-twitter {
+  margin-top: 5px;
+}
+</style>
+
+<script>
+  async function getInfluencers() {
+
+    const following_list = await fetch('http://localhost:1111/api/get_followers').then(data => data.json()).then(res => { return res['follower_list'] })
+
+    var following_data = []
+
+    for (var i=0; i < following_list.length; i++) {
+      
+      var following_user = following_list[i]
+      following_data.push({
+        'influencer_name': following_user.name,
+        'influencer_id': following_user.user_id,
+        'followers': following_user.follower_count,
+        'screen_name': following_user.screen_name,
+        'tokens_tweeted': following_user.tokens_tweeted,
+        'performance_stats': following_user.performance
+      })
+
+    }
+    
+    var following_table_data = []
+
+    for (var i=0; i < following_data.length; i++) {
+        
+        const influencer = following_data[i]
+
+        let influencer_name     = influencer.influencer_name
+        let influencer_id       = influencer.influencer_id
+        let follower_count      = influencer.followers
+        let tokens_tweeted      = influencer.tokens_tweeted
+        let average_performance = influencer.average_performance
+        let screen_name         = influencer.screen_name
+        let performance_stats   = influencer.performance_stats
+
+        following_table_data.push({
+          'toggle':
+            `
+              <div class="form-check" style="right: 10px;">
+                <label class="form-check-label">
+                  <input class="form-check-input influencer-checkbox" type="checkbox" checked="" influencer-id="${ influencer_id }">
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            `,
+          'influencer': `<a href="/influencer/${ influencer_id }">${ influencer_name }</a>`,
+          'Twitter': `<a href="https://www.twitter.com/${ screen_name }" target="_blank"><button class="btn btn-icon btn-round btn-twitter"> <i class="fab fa-twitter"></i> </button></a> @${ screen_name } `,
+          'followers': numberWithCommas(follower_count),
+          'tokens_tweeted': tokens_tweeted,
+          'average_performance': `<span performance-data=${ JSON.stringify(performance_stats) } class="performance-stats">${ performance_stats['1'] }%</span>`
+        })
+        
+      }
+
+      return following_table_data
+      
+  }
+</script>
+
+<script>
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+</script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      // $('#example').DataTable()
+
+      window.influencersTable = $('#example').DataTable({
+          columns: [
+              {
+                data: 'toggle',
+                className: 'text-center'
+              },
+              {
+                data: 'influencer',
+                className: ''
+              },
+              { data: 'Twitter' },
+              { data: 'followers' },
+              { data: 'tokens_tweeted' },
+              { data: 'average_performance' },
+          ],
+          order: [[4, 'desc']],
+      });
+      
+      const influencer_table_data = await getInfluencers()
+
+      // Set tweet data in DataTable w/ DT API
+      window.influencersTable.rows.add( influencer_table_data ).draw()
+
+      // Add listeners to table control elements
+      addControlListeners()
+
+    })
+</script>
+
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+<style>
+body { font-family: 'Montserrat'; background-color: #ddd; }
+.container { margin: 150px auto; max-width: 640px; line-height: 1.7; font-size: 18px; }
+.copy-click {
+  position: relative;
+  padding-bottom: 2px;
+  text-decoration: none;
+  cursor: copy;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px dashed #767676;
+  transition: background-color calc(var(--duration) * 2) var(--ease);
+}
+
+
+.swal-p .copy-click {
+  color: #484848 !important;
+}
+
+.swal-p {
+  color: black;
+}
+
+.white-content .copy-click {
+  color: #484848 !important;
+}
+
+.copy-click:after {
+  content: attr(data-tooltip-text);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  padding: 8px 16px;
+  white-space: nowrap;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 0 -12px rgba(0, 0, 0, 0);
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translate(-50%, 12px);
+          transform: translate(-50%, 12px);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), -webkit-transform calc(var(--duration) / 1.5) var(--bounce);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), transform calc(var(--duration) / 1.5) var(--bounce);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), transform calc(var(--duration) / 1.5) var(--bounce), -webkit-transform calc(var(--duration) / 1.5) var(--bounce);
+}
+.copy-click.is-hovered:after {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+  transition-timing-function: var(--ease);
+  z-index: 999999999999 !important;
+}
+.copy-click.is-copied {
+  background-color: #f7ec9cd9;
+}
+.copy-click.is-copied:after {
+  content: attr(data-tooltip-text-copied);
+}
+
+.white-content .copy-click {
+    color: white;
+}
+
+</style>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+
+{% endblock javascripts %}
+

@@ -1,0 +1,289 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Set Up {% endblock title %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <div class="col-md-10 mr-auto ml-auto">
+    <!--      Wizard container        -->
+    <div class="wizard-container">
+      <div class="card card-wizard" data-color="primary" id="wizardProfile">
+        <form>
+          <!--        You can switch " data-color="primary" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
+          <div class="card-header text-center">
+            <h3 class="card-title">
+              Set Up
+            </h3>
+            <h5 class="description">3 quick steps to set up your bot.</h5>
+            <div class="wizard-navigation">
+              <div class="progress-with-circle">
+                <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="3" style="width: 21%;"></div>
+              </div>
+              <ul>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#about" data-toggle="tab" id="channel_url_tab">
+                    <i class="fa-solid fa-link"></i>
+                    <p>Link A Channel</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#account" data-toggle="tab">
+                    <i class="fa-brands fa-discord"></i>
+                    <p>Authorize Bot</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#address" data-toggle="tab">
+                    <i class="fa-brands fa-chrome"></i>
+                    <p>Install Extension</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane show active" id="about">
+                <h5 class="info-text" style="margin-bottom: 0px;">Log into discord in your browser and create a new channel.</h5>
+                <h5 class="info-text">Copy the URL of your new channel and paste it below.</h5>
+                <div class="row justify-content-center mt-5">
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fa-brands fa-discord"></i>
+                        </div>
+                      </div>
+                      <input required type="text" name="channel_url" class="form-control" placeholder="Discord Channel URL" id="channel_url">
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="account">
+                <h5 class="info-text">Authorize the <b>Tokeneer Bot</b> for your new server.</h5>
+                <div class="row justify-content-center">
+                  <div class="col-lg-10 text-center">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <!-- <div class="fileinput-new thumbnail">
+                        <img src="/static/assets/img/image_placeholder.jpg" alt="...">
+                      </div> -->
+                      <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                      <div>
+                        <a class="btn btn-primary btn-simple btn-file"  href="https://discord.com/api/oauth2/authorize?client_id=1006240168140865626&permissions=8&scope=bot" target="_blank">
+                          <span style="color: #e14eca" class="fileinput-new">Authorize Here</span>
+                          <!-- <span class="fileinput-exists">Change</span>
+                          <input type="file" name="..." /> -->
+                          </a>
+                        <!-- <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="address">
+                <h5 class="info-text" style="margin-bottom: 0px;">Download the browser extension ZIP and send to your purchasers.</h5>
+                <h5 class="info-text" style="margin-bottom: 10px;">Have them install it on the ShownsOnSale Browser by following these steps:</h5>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-10 text-center">
+                    <ul style="
+                          list-style: none;
+                          padding: 0px;
+                          margin-bottom: 30px;
+                      ">
+                      <style>
+                        .no-margin-bottom {
+                          margin-bottom: 0px !important;
+                        }
+                      </style>
+                      <li ><h5 class="info-text no-margin-bottom">1. Click the 3 dots in the top right of the browser</h5></li>
+                      <li ><h5 class="info-text no-margin-bottom">2. Click "More Tools > Extensions"</h5></li>
+                      <li ><h5 class="info-text no-margin-bottom">3. Select the "Load Unpacked" option in the top left</h5></li>
+                      <li ><h5 class="info-text no-margin-bottom">4. Intall the un-zipped extension file</h5></li>
+                      <li ><h5 class="info-text no-margin-bottom">5. Click the extensions icon (<i class="fa-solid fa-puzzle-piece"></i>) in the top right of the browser and open the Tokeneer from the selection menu.</h5></li>
+                      <li ><h5 class="info-text no-margin-bottom">6. In the pop up window, have your purchasers input their name and add the link to your server.</h5></li>
+                    </ul>
+                  </div>
+                  <div class="col-lg-10 text-center">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <!-- <div class="fileinput-new thumbnail">
+                        <img src="/static/assets/img/image_placeholder.jpg" alt="...">
+                      </div> -->
+                      <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                      <div>
+                        <a class="btn btn-primary btn-simple btn-file" href="https://github.com/jridyard/tda-extension-mv2/archive/refs/heads/main.zip">
+                          <span style="color: #e14eca" class="fileinput-new" ><i class="fa-brands fa-chrome"></i> &nbsp;Download Extension</span>
+                          <!-- <span class="fileinput-exists">Change</span>
+                          <input type="file" name="..." /> -->
+                          </a>
+                        <!-- <a href="#pablo" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="pull-right">
+              <input type='button' class='btn btn-next btn-fill btn-primary btn-wd' name='next' value='Next' />
+              <button type='button' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' id="finish_button">
+                <!-- Finish -->
+                <span id="finish_text">Finish</span>
+                <div id="loading_outer">
+                  <div id="finish_loading" style="display: none;" class="dot-flashing"></div>
+                </div>
+              </button>
+            </div>
+            <div class="pull-left">
+              <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- wizard container -->
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<style>
+  .no-border {
+    border-color: transparent;
+    /* color: #ffffff00; */
+  }
+</style>
+<script>
+    $(document).ready(function() {
+        // Initialise the wizard
+        demo.initNowUiWizard();
+        setTimeout(function() {
+        $('.card.card-wizard').addClass('active');
+        }, 600);
+
+        if (document.URL.includes('#new-user')) {
+          window.history.pushState("object or string", "Title", "/setup");
+          Swal.fire({
+              // icon: 'info',
+              iconHtml: '<img src="/static/assets/img/ticket-assistant-logo-svg.svg">',
+              customClass: {
+                icon: 'no-border'
+              },
+              title: `Welcome to Tokeneer!`,
+              text: "We're excited for you to get started. Set up only takes 5 minutes!",
+              confirmButtonText: "Let's do it.",
+              showCloseButton: true
+          })
+        }
+
+        document.querySelector('#finish_button').addEventListener('click', async () => {
+          document.querySelector('#finish_text').style.display = 'none'
+          document.querySelector('#loading_outer').style.padding = '5px 25px'
+          document.querySelector('#finish_loading').style.display = 'block'
+
+          const channel_url = document.querySelector('#channel_url').value
+          const channel_id = channel_url.split('/')[channel_url.split('/').length - 1]
+          if (channel_id.length != 19 || isNaN(channel_id)) {
+            
+              document.querySelector('#finish_text').style.display = 'block'
+              document.querySelector('#finish_loading').style.display = 'none'
+              document.querySelector('#loading_outer').style.padding = '0px'
+              
+              Swal.fire({
+                  icon: 'error',
+                  title: `Invalid channel link!`,
+                  text: "The channel URL should look like this: https://discord.com/channels/1010934604561112345/1010934604561154321",
+                  confirmButtonText: "Let's fix it.",
+                  showCloseButton: true
+              }).then(response => {
+                console.log(response)
+                if (response.isConfirmed) {
+                  document.querySelector('#channel_url_tab').click()
+                }
+              })
+              return
+          } else if (channel_url == 'https://discord.com/channels/1010934604561112345/1010934604561154321') {
+              
+            document.querySelector('#finish_text').style.display = 'block'
+            document.querySelector('#finish_loading').style.display = 'none'
+            document.querySelector('#loading_outer').style.padding = '0px'
+            
+            Swal.fire({
+                  icon: 'error',
+                  title: `You cant use the example link!`,
+                  text: "The channel URL you provide is important. It's where you'll receive your messages.",
+                  confirmButtonText: "Fine, I'll add my URL now.",
+                  showCloseButton: true
+              }).then(response => {
+                console.log(response)
+                if (response.isConfirmed) {
+                  document.querySelector('#channel_url_tab').click()
+                }
+              })
+          }
+
+          let response = await fetch("/api/change_channel", {
+            "method": "POST",
+            "body": JSON.stringify({
+              'channel_url': channel_url,
+              'channel_id': channel_id
+            }),
+            cache: "no-cache",
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+          }).then((response) => response.json())
+          .then((data) => {
+              console.log('got response')
+              console.log(data)
+              return data['response']
+          })
+          .catch(err => {
+            Swal.fire({
+                  icon: 'error',
+                  title: `500 Error!`,
+                  text: "Our server had an issue processing this request. Please reach out to an admin. We'll give you free credits for the inconvenience.",
+                  confirmButtonText: "OK",
+                  showCloseButton: true
+            })
+          })
+
+          if (response == 'Success') {
+              setTimeout(() => {
+                https = window.location.host.includes('localhost') ? 'http://' : 'https://'
+                window.location = https + window.location.host + "/purchasers#new-user"
+              }, 400);
+              return
+          }
+
+          document.querySelector('#finish_text').style.display = 'block'
+          document.querySelector('#finish_loading').style.display = 'none'
+          document.querySelector('#loading_outer').style.padding = '0px'
+
+          if (response == 'Channel Already Registered') {
+            Swal.fire({
+                icon: 'error',
+                title: `Uh Oh!`,
+                text: "This channel has already been registered.",
+                confirmButtonText: "Let's change it.",
+                showCloseButton: true
+            }).then(response => {
+              console.log(response)
+              if (response.isConfirmed) {
+                document.querySelector('#channel_url_tab').click()
+              }
+            })
+          }
+        })
+
+    });
+    
+</script>
+
+
+{% endblock javascripts %}

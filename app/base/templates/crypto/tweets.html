@@ -1,0 +1,820 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tables Extended {% endblock title %}
+
+<!-- jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<script>
+  //   ↓↓↓   GLOBALS   ↓↓↓   \\
+  
+  window.lastCallInterval = 60 // 60 minutes (calls within last hour) by default
+  
+  //   ↑↑↑   GLOBALS   ↑↑↑   \\
+</script>
+
+<style>
+
+
+  .activate-license-button {
+    padding: 8px 15px !important;
+    border-radius: 30px;
+    margin-right: 20px;
+  }
+
+  .deactivate-license-button {
+    padding: 8px 20px !important;
+    border-radius: 30px;
+    margin-right: 20px;
+
+  }
+
+  .discord-auth-link {
+    font-size: 1rem;
+    color: white;
+  }
+
+  .discord-auth-link:hover {
+    color: rgba(255, 255, 255, 0.671);
+  }
+
+  .card-stats .info-icon i {
+      color: #ffffff;
+      font-size: 1.7em;
+      padding: 14px 9px;
+  }
+
+  .card-stats .info-icon.icon-warning {
+      background: #5865f2 !important;
+      /* background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72); */
+      background-size: 210% 210%;
+      background-position: top right;
+  }
+
+  .no-overflow {
+    overflow-x: hidden !important;
+  }
+
+  .card-button-footer {
+    margin: 10px;
+  }
+
+.discord-button {
+  background: #5865f2 !important
+}
+
+.discord-button:hover {
+  background: #4553ee !important
+}
+
+.discord-button:focus {
+  background: #5f6bf0 !important
+}
+
+.discord-button:active {
+  background: #5f6bf0 !important
+}
+
+body.white-content .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default, body.white-content body.white-content .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
+    color: #000;
+}
+
+body.white-content .bootstrap-switch .bootstrap-switch-handle-on,  body.white-content .bootstrap-switch .bootstrap-switch-handle-off, body.white-content .bootstrap-switch .bootstrap-switch-label {
+    color: #000;
+}
+
+.white-content ul li {
+    color: transparent !important;
+}
+</style>
+
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="tools float-right" style="display: none;">
+            <div class="dropdown">
+              <button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon" data-toggle="dropdown">
+                <i class="tim-icons icon-settings-gear-63"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item text-danger" href="#" id="remove-tweets">Remove tweets</a>
+              </div>
+            </div>
+          </div>
+          <!-- <h4 class="card-title">
+            Tweets
+          </h4> -->
+          <!-- TWEET OPTIONS -->
+          <div class="col-md-6 mb-4">
+            <h4 class="card-title">Tweet Options</h4>
+            <div class="row">
+              <div class="col-lg-5 col-md-6 col-sm-3">
+                <h5>Track Calls Within Last...</h5>
+                <select class="selectpicker" data-size="7" data-style="btn btn-primary" title="Single Select" id="calls_within_num">
+                  <option selected value="60">Last Hour</option>
+                  <option value="120">Last 2 Hours</option>
+                  <option value="240">Last 4 Hours</option>
+                  <option value="480">Last 8 Hours</option>
+                  <option value="1440">Last 24 Hours</option>
+                  <option value="2880">Last 48 Hours</option>
+                  <option value="4320">Last 72 Hours</option>
+                  <option value="10080">Last Week</option>
+                  <option value="20160">Last 2 Weeks</option>
+                  <option value="40320">Last Month</option>
+                </select>
+              </div>
+              <div class="col-lg-5 col-md-6 col-sm-3">
+                <h5>Price Change Since Tweet After...</h5>
+                <select class="selectpicker" data-size="7" data-style="btn btn-primary" title="Single Select" id="price_change_since_tweeted">
+                  <option selected value="1">1h</option>
+                  <option value="2">2h</option>
+                  <option value="3">3h</option>
+                  <option value="4">4h</option>
+                  <option value="12">12h</option>
+                  <option value="24">24h</option>
+                </select>
+              </div>
+              <!-- <div class="col-lg-5 col-md-6 col-sm-3">
+                <select class="selectpicker" data-style="btn btn-info" multiple title="Choose City" data-size="7">
+                  <option disabled> Multiple Options</option>
+                  <option value="2">Paris </option>
+                  <option value="3">Bucharest</option>
+                  <option value="4">Rome</option>
+                  <option value="5">New York</option>
+                  <option value="6">Miami </option>
+                  <option value="7">Piatra Neamt</option>
+                  <option value="8">Paris </option>
+                  <option value="9">Bucharest</option>
+                  <option value="10">Rome</option>
+                  <option value="11">New York</option>
+                  <option value="12">Miami </option>
+                  <option value="13">Piatra Neamt</option>
+                  <option value="14">Paris </option>
+                  <option value="15">Bucharest</option>
+                  <option value="16">Rome</option>
+                  <option value="17">New York</option>
+                  <option value="18">Miami </option>
+                  <option value="19">Piatra Neamt</option>
+                </select>
+              </div> -->
+            </div>
+          </div>
+          <!-- TWEET OPTIONS -->
+          <!-- <div class="col-md-4">
+            <p class="category">Show new tweets</p>
+            <input type="checkbox" checked name="checkbox" class="bootstrap-switch" data-on-label="ON" data-off-label="OFF" />
+          </div> -->
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sortable table-striped" data-toggle="table" data-sort-name="date" data-sort-order="desc" id="example">
+              <thead>
+                <tr>
+                  <th style="width: 3%;">
+                    <!-- More Info -->
+                  </th>
+                  <th style="width: 10%;">
+                    Date
+                  </th>
+                  <th style="width: 10%;">
+                    Influencer
+                  </th>
+                  <th style="width: 15%;">
+                    Tweet
+                  </th>
+                  <th style="width: 10%;">
+                    Token
+                  </th>
+                  <th style="width: 15%;">
+                    # Calls (<span id="thead-calls-num-span">Last Hour</span>)
+                  </th>
+                  <th style="width: 15%;">
+                    Price Change (<span id="thead-price-change-span">1h</span>)
+                  </th>
+                </tr>
+            </thead>
+            <tbody id="tweets_table_body">
+
+            </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+<script>
+    function waitForElm(selector) {
+      return new Promise(resolve => {
+          if (document.querySelector(selector)) {
+              return resolve(document.querySelector(selector))
+          }
+          let observer = new MutationObserver(mutations => {
+              if (document.querySelector(selector)) {
+                  resolve(document.querySelector(selector))
+                  observer.disconnect();
+              }
+          });
+          observer.observe(document.body, {
+              childList: true,
+              subtree: true
+          })
+      })
+  }
+
+  function withinLast( minutes_interval, tweet_datetime ) {
+
+      var date = new Date(tweet_datetime)
+      var now = new Date();
+
+      var diffInMS = now - date;
+      var msInHour = Math.floor(diffInMS/1000/60);
+
+      if (msInHour < minutes_interval) return true
+
+      return false
+  }
+</script>
+
+
+
+<script>
+  async function getTweetData() {
+
+    const tweets_list = await fetch('http://localhost:1111/api/get_tweets').then(data => data.json()).then(res => { return res['tweet_list'] })
+
+      window.tweet_count = {}
+      window.calledInLastHour = {}
+
+      for (var i=0; i < tweets_list.length; i++) {
+        
+        var tweet = tweets_list[i]
+
+        const withinLastN =  withinLast( minutes_interval = window.lastCallInterval, tweet.datetime + "+00:00" )
+        if ( withinLastN ) {
+          if (!window.tweet_count[tweet.token]) window.tweet_count[tweet.token] = 1
+          else window.tweet_count[tweet.token] += 1
+
+          window.calledInLastHour[i] = true
+        }
+
+      }
+      
+      // let html = ''
+
+      var tweet_table_data = []
+
+      for (var i=0; i < tweets_list.length; i++) {
+        
+        const tweet = tweets_list[i]
+
+        let tweeter_name          = tweet.name
+        let internal_tweet_id     = tweets_list[i].id
+        let token_name            = tweet.token_name
+        let token_id              = tweet.token
+        let actual_tweet          = tweet.tweet
+        let tweet_id              = tweet.tweet_id
+        let datetime              = tweet.datetime + "+00:00"
+        let normalized_datetime   = normalizeDatetime(datetime)
+        const callsNum            = window.tweet_count[ token_id ]
+        const original_price = tweet.prices['0']
+        const prices = tweet.prices
+        const priceChanges = {
+            "1":  getPriceChange( original_price, prices['1'] ),
+            "2":  getPriceChange( original_price, prices['2'] ),
+            "3":  getPriceChange( original_price, prices['3'] ),
+            "4":  getPriceChange( original_price, prices['4'] ),
+            "12": getPriceChange( original_price, prices['12'] ),
+            "24": getPriceChange( original_price, prices['24'] )
+        }
+        
+
+        tweet_table_data.push( {
+          "date":             normalized_datetime,
+          "influencer":       tweeter_name,
+          "tweet":            `<a href="https://twitter.com/${tweeter_name}/status/${tweet_id}" tweet-data="${ actual_tweet }" target="_blank">${ actual_tweet.slice(0, 30) }${ actual_tweet.length >= 30 ? '...' : ''}</a>`,
+          "token":            `<a href="https://www.defined.fi/eth/${ token_id }" token-id="${ token_id }" target="_blank"> ${ token_name } </a>`,
+          "number_of_calls":  window.calledInLastHour[ i ] ? `<span class=\"#-calls-${ token_id }\"><b>${ callsNum }</b> &nbsp; ${ callsNum < 5 ? '🔥' : callsNum < 15 ? '🔥🔥' : '🔥🔥🔥'}</span>` : "❄️",
+          "price_change": `<span price-data=${ JSON.stringify(priceChanges) } class="price-changes">${ priceChanges['1'] }%</span>`
+        })
+
+      }
+
+      return tweet_table_data
+
+  }
+
+function getPriceChange( old_price, new_price ) {
+    let percent;
+    if(new_price !== 0) {
+        if(old_price !== 0) {
+            percent = (new_price - old_price) / old_price * 100;
+        } else {
+            percent = new_price * 100;
+        }
+    } else {
+        percent = - old_price * 100;
+    }       
+    return roundTo( percent, 2 )
+}
+
+function roundTo(n, digits) {
+    if (digits === undefined) {
+      digits = 0;
+    }
+  
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    var test =(Math.round(n) / multiplicator);
+    return +(test.toFixed(digits));
+}
+
+</script>
+
+<script>
+
+  async function fetch_get ( FETCH_URL, HEADERS = {}) {
+  
+      const RESPONSE = await fetch( FETCH_URL, {
+          'headers': new Headers( HEADERS ),
+          'method': 'GET'
+       }).then((response) => response.json())
+      .then((data) => {
+          return data
+      })
+      .catch(err => {
+          console.error(`
+              Error occured on request for URL: ${ FETCH_URL }. \n
+              Error details: ${ err.toString() }
+          `)
+          return err
+      })
+  
+      return RESPONSE
+  
+  }
+
+  async function checkNewTweets() {
+    const new_tweet_data = await fetch_get (
+      FETCH_URL = 'http://localhost:1111/api/check_tweets'
+    )
+
+    if (new_tweet_data.response == "New Tweet") {
+      
+      const tweet = new_tweet_data.data
+
+      let tweeter_name          = tweet.name
+      let internal_tweet_id     = tweet.id
+      let token_name            = tweet.token_name
+      const token_id            = tweet.token
+      let actual_tweet          = tweet.text
+      let tweet_id              = tweet.tweet_id
+      let datetime              = tweet.created_at + "+00:00"
+      let normalized_datetime   = normalizeDatetime(datetime)
+
+      window.tweetsTable.row.add({
+        "date":             normalized_datetime,
+        "influencer":       tweeter_name,
+        "tweet":            `<a href="https://twitter.com/${tweeter_name}/status/${tweet_id}" tweet-data="${ actual_tweet }" target="_blank">${ actual_tweet.slice(0, 30) }${ actual_tweet.length >= 30 ? '...' : ''}</a>`,
+        "token":            `<a href="https://www.defined.fi/eth/${ token_id }" token-id="${ token_id }" target="_blank"> ${ token_name } </a>`,
+        "number_of_calls":  `<span class="#-calls-${ token_id }" >${ window.tweet_count[ token_id ] ? window.tweet_count[ token_id ] : 'None in last hour'}</span>`,
+        "price_change":  `-`,
+      }).draw(false);
+
+      resetCalls()
+      
+      const within_last_interval = document.querySelector('#thead-calls-num-span').textContent
+      
+      demo.showNewTweetNotification('top', 'right', tweeter_name, token_name, window.tweet_count[ token_id ], within_last_interval)
+
+    }
+
+    setTimeout(() => {
+      checkNewTweets()
+    }, 1500);
+
+  }
+</script>
+
+
+<script>
+  function resetCalls() {
+
+    window.tweet_count = {}
+    window.calledInLastHour = {}
+    window.row_updates = {}
+
+    var indexes = window.tweetsTable.rows().eq( 0 ).filter(function (rowIdx) {   // get the row index matching the unique value
+        const row_data = window.tweetsTable.cell( rowIdx, 0 ).data()
+
+        const token_data = row_data['token']
+        const token_str = token_data.split("token-id=\"")[1]
+        const token = token_str.split("\"")[0]
+
+        const called_at = row_data['date']
+        const withinLastHour = withinLast( minutes_interval = window.lastCallInterval, called_at )
+        
+        if ( withinLastHour ) {
+          window.calledInLastHour[ rowIdx ] = true
+          if (!window.tweet_count[token]) window.tweet_count[token] = 1
+          else window.tweet_count[token] += 1
+        }
+
+        window.row_updates[ rowIdx ] = row_data
+
+        return true
+    });
+
+    var updates_to_make = Object.keys( window.row_updates )
+
+    for (var i=0; i < updates_to_make.length; i++) {
+      
+      var rowIdx = updates_to_make[i]
+      var row_data = window.row_updates[ rowIdx ]
+
+      const token_data = row_data['token']
+      const token_str = token_data.split("token-id=\"")[1]
+      const token = token_str.split("\"")[0]
+
+      const callsNum = window.tweet_count[ token ]
+
+      row_data['number_of_calls'] = window.calledInLastHour[ rowIdx ] ? `<span class=\"#-calls-${ token }\"><b>${ callsNum }</b> &nbsp; ${ callsNum < 5 ? '🔥' : callsNum < 15 ? '🔥🔥' : '🔥🔥🔥'}</span>` : "❄️"
+
+      window.row_updates[ rowIdx ] = row_data
+
+      window.tweetsTable.row(rowIdx).data( window.row_updates[ rowIdx ] )
+      
+    }
+
+  }
+</script>
+
+<script>
+  function normalizeDatetime(date) {
+
+    const datetime  = new Date(date)
+    const converted = datetime.toLocaleString('en-US', {
+      timeZone: 'CST',
+    })
+
+    const date1 = converted.slice(0, converted.length - 6)
+    const date2 = converted.slice(converted.length - 3, converted.length)
+
+    return date1 + date2
+  }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+<style>
+
+  .dt-control {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(34, 42, 66, 0);
+    --animate-duration: 0.8s;
+    --animate-delay: 0.8s;
+    --animate-repeat: 1;
+    --blue: #5e72e4;
+    --indigo: #5603ad;
+    --purple: #8965e0;
+    --pink: #f3a4b5;
+    --red: #f5365c;
+    --orange: #fb6340;
+    --yellow: #ffd600;
+    --green: #2dce89;
+    --teal: #11cdef;
+    --cyan: #2bffc6;
+    --gray: #6c757d;
+    --gray-dark: #32325d;
+    --lighter: #e9ecef;
+    --primary: #e14eca;
+    --secondary: #f4f5f7;
+    --success: #00f2c3;
+    --info: #1d8cf8;
+    --warning: #ff8d72;
+    --danger: #fd5d93;
+    --light: #adb5bd;
+    --dark: #212529;
+    --default: #344675;
+    --white: #ffffff;
+    --neutral: #ffffff;
+    --darker: black;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --fa-font-brands: normal 400 1em/1 "Font Awesome 6 Brands";
+    --fa-font-regular: normal 400 1em/1 "Font Awesome 6 Free";
+    --fa-font-solid: normal 900 1em/1 "Font Awesome 6 Free";
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Montserrat';
+    word-wrap: break-word;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-top: 0.0625rem solid #e3e3e3;
+    box-sizing: content-box;
+    text-align: center;
+    cursor: pointer;
+    color: rgba(34, 42, 66, 0.7) !important;
+    border-color: rgba(34, 42, 66, 0.2);
+    padding: 12px 7px;
+    vertical-align: middle;
+  }
+
+table.dataTable tr.dt-hasChild td.dt-control:before {
+    content: "-";
+    background-color: #d33333;
+}
+
+  table.dataTable td.dt-control:before {
+    height: 1em;
+    width: 1em;
+    margin-top: -9px;
+    display: inline-block;
+    color: white;
+    border: 0.15em solid white;
+    border-radius: 1em;
+    box-shadow: 0 0 0.2em #444;
+    box-sizing: content-box;
+    text-align: center;
+    text-indent: 0 !important;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1em;
+    cursor: pointer;
+    content: "+";
+    background-color: #31b131;
+}
+
+.token-iframe {
+  width:100%;
+  height: 550px;
+}
+
+.dropdown-card {
+  background: transparent !important;
+}
+
+.tweet-span {
+  white-space: pre-wrap;
+}
+
+.defined-link {
+
+    width: 20%;
+    background: #81f2c8;
+    background-size: 210% 210%;
+    background-position: top right;
+    color: #ffffff;
+    background-size: 210% 210%;
+    background-position: top right;
+    background-repeat: space;
+    margin-top: 20px !important;
+
+}
+
+.view-defined {
+  color: #191534;
+  display: inherit !important;
+}
+
+.tab-space {
+  padding: 20px 0px 0px 0px !important;
+}
+</style>
+
+<script>
+  function addControlListeners() {
+
+    // Change tracker for number of calls in last N
+    document.querySelector('#calls_within_num').addEventListener('change', (e) => {
+      var current_target = e.currentTarget
+      var lastCallText = document.querySelector('[data-id="calls_within_num"] .filter-option-inner-inner').textContent
+      document.querySelector('#thead-calls-num-span').textContent = lastCallText
+      window.lastCallInterval = parseInt( current_target.value )
+      resetCalls()
+    })
+
+    document.querySelector('#price_change_since_tweeted').addEventListener('change', (e) => {
+      var current_target = e.currentTarget
+      const targetHour = current_target.value
+      var priceChangeSinceText = document.querySelector('[data-id="price_change_since_tweeted"] .filter-option-inner-inner').textContent
+      $('#thead-price-change-span').text(priceChangeSinceText)
+      $('.price-changes').each((index, element) => {
+        const priceChangeData = $(element).attr('price-data')
+        const priceChanges = JSON.parse(priceChangeData)
+        const priceChange = priceChanges[targetHour]
+        element.textContent = (priceChange !== null && priceChange !== undefined) ? (priceChange.toString() + "%" + (priceChange < 5 ? '' : priceChange < 15 ? ' 🔥' : priceChange < 25 ? ' 🔥🔥' : ' 🔥🔥🔥')) : '-'
+      })
+    })
+    
+  }
+</script>
+
+<script>
+/* Formatting function for row details - modify as you need */
+function format(d) {
+    console.log('\x1b[32m%s\x1b[0m', `logging d`)
+    console.log(d)
+
+    var tweet_as_html = document.createElement('div')
+    tweet_as_html.innerHTML = d.tweet
+    const tweet_link = tweet_as_html.querySelector('a').href
+    const tweet = tweet_as_html.querySelector('a').getAttribute('tweet-data')
+
+    var token_as_html = document.createElement('div')
+    token_as_html.innerHTML = d.token
+    const token_link = token_as_html.querySelector('a').href
+    const token_id = token_as_html.querySelector('a').getAttribute('token-id')
+
+    return (
+      `
+        <div class="row">
+          <div class="col-12">
+            <div class="card dropdown-card">
+              <div class="card-body">
+                <ul class="nav nav-pills nav-pills-primary">
+                  <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#link1-${d.DT_RowId}">
+                      Tweet
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#link2-${d.DT_RowId}">
+                      Token
+                    </a>
+                  </li>
+                </ul>
+                <div class="tab-content tab-space">
+                  <div class="tab-pane active" id="link1-${d.DT_RowId}" style="margin-left: 5px;">
+                    <span class="tweet-span">${ tweet }</span>
+                    <br>
+                    <a class="btn btn-simple btn-twitter" style="margin-top: 25px;" href="${ tweet_link }" target="_blank">
+                      <i class="fab fa-twitter"></i>
+                      View Tweet
+                    </a>
+                  </div>
+                  <div class="tab-pane" id="link2-${d.DT_RowId}">
+                    <iframe class="token-iframe" src="https://www.defined.fi/eth/${ token_id }?cache=1d993"></iframe>
+                    <a class="btn defined-link" href="https://www.defined.fi/eth/${ token_id }" target="_blank">
+                      <img src="https://pbs.twimg.com/profile_images/1395427369662390272/JiHWxi6M_400x400.png" style="border-radius: 24.2857rem; max-width: 10%;">
+                      <span class="view-defined">
+                        &nbsp; View Token
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+    );
+
+}
+
+
+$(document).ready(async function () {
+    const table = $('#example').DataTable({
+        columns: [
+            {
+                className: 'dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+            },
+            { data: 'date' },
+            { data: 'influencer' },
+            { data: 'tweet' },
+            { data: 'token' },
+            { data: 'number_of_calls' },
+            { data: 'price_change' },
+        ],
+        order: [[1, 'desc']],
+    });
+
+    window.tweetsTable = $('#example').DataTable()
+ 
+    // Add event listener for opening and closing details
+    $('#example tbody').on('click', 'td.dt-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+ 
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown dt-hasChild');
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown dt-hasChild');
+        }
+    });
+
+    // Get current tweet table data from API
+    const tweet_table_data = await getTweetData()
+
+    // Set tweet data in DataTable w/ DT API
+    window.tweetsTable.rows.add( tweet_table_data ).draw()
+
+    // Add listeners to table control elements
+    addControlListeners()
+
+    // Wait 1.5s and start listening for new tweets
+    setTimeout(() => {
+      checkNewTweets()
+    }, 1500);
+    
+});
+</script>
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+<style>
+body { font-family: 'Montserrat'; background-color: #ddd; }
+.container { margin: 150px auto; max-width: 640px; line-height: 1.7; font-size: 18px; }
+.copy-click {
+  position: relative;
+  padding-bottom: 2px;
+  text-decoration: none;
+  cursor: copy;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px dashed #767676;
+  transition: background-color calc(var(--duration) * 2) var(--ease);
+}
+
+
+.swal-p .copy-click {
+  color: #484848 !important;
+}
+
+.swal-p {
+  color: black;
+}
+
+.white-content .copy-click {
+  color: #484848 !important;
+}
+
+.copy-click:after {
+  content: attr(data-tooltip-text);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  padding: 8px 16px;
+  white-space: nowrap;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 0 -12px rgba(0, 0, 0, 0);
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translate(-50%, 12px);
+          transform: translate(-50%, 12px);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), -webkit-transform calc(var(--duration) / 1.5) var(--bounce);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), transform calc(var(--duration) / 1.5) var(--bounce);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), transform calc(var(--duration) / 1.5) var(--bounce), -webkit-transform calc(var(--duration) / 1.5) var(--bounce);
+}
+.copy-click.is-hovered:after {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+  transition-timing-function: var(--ease);
+  z-index: 999999999999 !important;
+}
+.copy-click.is-copied {
+  background-color: #f7ec9cd9;
+}
+.copy-click.is-copied:after {
+  content: attr(data-tooltip-text-copied);
+}
+
+.white-content .copy-click {
+    color: white;
+}
+
+</style>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+
+{% endblock javascripts %}
+

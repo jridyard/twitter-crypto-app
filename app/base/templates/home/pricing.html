@@ -1,0 +1,145 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Pricing {% endblock title %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block bodyclass %}pricing{% endblock %}
+
+{% block content %}
+
+  <style>
+    .card-pricing ul {
+      margin: 50px auto 40px !important;
+    }
+  </style>
+
+    <div class="row">
+      <div class="col-md-6 ml-auto mr-auto text-center">
+        <h1 class="title">Pricing Tiers</h1>
+        <h4 class="description">Scale your ticket buying business with ease and add users as you grow.</h4>
+      </div>
+    </div>
+    <br>
+    <br>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-pricing card-primary">
+            <div class="card-body">
+              <h1 class="card-title">pro</h1>
+              <img class="card-img" src="/static/assets/img/card-primary.png" alt="Image">
+              <ul class="list-group">
+                <li class="list-group-item">51+ Buyers</li>
+                <!-- <li class="list-group-item">Unlimited purchasers</li> -->
+              </ul>
+              <div class="card-prices">
+                <h3 class="text-on-front">
+                  <span>$</span>33<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+                <h5 class="text-on-back">33</h5>
+                <p class="plan">Professional plan</p>
+              </div>
+            </div>
+            <div class="card-footer text-center mb-3 mt-3">
+              <!-- <button class="btn btn-round btn-just-icon btn-primary">Upgrade</button> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-pricing card-success card-white">
+            <div class="card-body">
+              <h1 class="card-title">tier 3</h1>
+              <img class="card-img" src="/static/assets/img/card-success.png" alt="Image">
+              <ul class="list-group">
+                <li class="list-group-item">16 - 50 Buyers</li>
+                <!-- <li class="list-group-item">30 purchasers</li> -->
+              </ul>
+              <div class="card-prices">
+                <h3 class="text-on-front">
+                  <span>$</span>37<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+                <h5 class="text-on-back">37</h5>
+                <p class="plan">Medium plan</p>
+              </div>
+            </div>
+            <div class="card-footer text-center mb-3 mt-3">
+              <!-- <button class="btn btn-round btn-just-icon btn-success">Upgrade</button> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-pricing card-warning card-white">
+            <div class="card-body">
+              <h1 class="card-title">tier 2</h1>
+              <img class="card-img" src="/static/assets/img/card-warning.png" alt="Image">
+              <ul class="list-group">
+                <li class="list-group-item">6 - 15 Buyers</li>
+                <!-- <li class="list-group-item">10 purchasers</li> -->
+              </ul>
+              <div class="card-prices">
+                <h3 class="text-on-front">
+                  <span>$</span>41<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+                  <h5 class="text-on-back">41</h5>
+                <p class="plan">Basic plan</p>
+              </div>
+            </div>
+            <div class="card-footer text-center mb-3 mt-3">
+              <!-- <button class="btn btn-round btn-just-icon btn-warning">Upgrade</button> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card card-pricing card-danger card-white">
+            <div class="card-body">
+              <h1 class="card-title">tier 1</h1>
+              <img class="card-img" src="/static/assets/img/card-danger.png" alt="Image">
+              <ul class="list-group">
+                <li class="list-group-item">1 - 5 Buyers</li>
+                <!-- <li class="list-group-item">3 Purchasers</li> -->
+                <!-- <li class="list-group-item">24/7 Support</li> -->
+              </ul>
+              <div class="card-prices">
+                <h3 class="text-on-front">
+                  <span>$</span>45<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+                <h5 class="text-on-back">45</h5>
+                <p class="plan">Starter plan</p>
+              </div>
+            </div>
+            <div class="card-footer text-center mb-3 mt-3">
+              <!-- <button class="btn btn-round btn-just-icon btn-danger">Get Started</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    </section>
+    <!-- <div class="col-md-12 mt-5">
+      <h3 class="title">Professional Plan</h3>
+    </div> -->
+    <!-- <div class="row">
+      <div class="col-md-4">
+        <p>Premium pricing is the strategy of consistently pricing at, or near, the high end of the possible price range to help attract status-conscious consumers. The high pricing of a premium product ...</p>
+      </div>
+      <div class="col-md-6 ml-auto">
+        <div class="progress-container progress-warning">
+          <span class="progress-badge">500GB</span>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
+            </div>
+          </div>
+        </div>
+        <div class="progress-container progress-primary">
+          <span class="progress-badge">4 years</span>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

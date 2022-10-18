@@ -1,0 +1,218 @@
+<header class="header-site" style="background-color: transparent !important; padding: 0px 30px;">
+    <div class="container-fluid">
+        <div class="header-row row align-items-center">
+            <!-- /.col -->
+            <div class="col-6 not_square_col">
+                <div class="header-logo" style="max-width: 300px !important">
+                    <a href="#" class="header-logo-link">
+                        <!-- <img src="/static/assets/upload/logo.svg" alt="Outsize" style="min-width: 150px;"> -->
+                        {% if game_type == 'competitive' %}
+                        <style>
+                            .flag__icon {
+                                content: url('/static/assets/img/flag.svg');
+                                max-width: 18px;
+                                margin-top: 21px;
+                                margin-left: 2px;
+                            }
+                        </style>
+                        <a href="#" class="challenge_button" onclick=forfeit()><i class="flag__icon" style="position: absolute;"></i>&nbsp; &nbsp;Forfeit</a>
+
+                        <script>
+
+                            function forfeit() {
+
+                                Swal.fire({
+                                    title: 'Are you sure you want to forfeit?',
+                                    icon: 'warning',
+                                    showDenyButton: false,
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Yes, I messed this one up.',
+                                    cancelButtonText: 'Cancel.'
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                        // window.location = `${window.origin}/game?new`
+                                        save_match(forfeit=true)
+                                    }
+                                })
+
+                            }
+
+                        </script>
+
+                        {% else %}
+                        <a href="#" class='new_game_button' onclick=autoGenerate()>New Game</a>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <!-- /.col -->
+            <div class="toolbar-col col" style=" margin-right: 20px; ">
+                <button class="toolbar-toggle">
+                    <svg width="16" height="3" viewBox="0 0 16 3" fill="none" xmlns="https://www.w3.org/2000/svg">
+                        <path d="M1.45455 0C0.654224 0 0 0.674668 0 1.5C0 2.32533 0.654224 3 1.45455 3C2.25487 3 2.90909 2.32533 2.90909 1.5C2.90909 0.674668 2.25487 0 1.45455 0Z" fill="currentColor"/>
+                        <path d="M8.00002 0C7.1997 0 6.54547 0.674668 6.54547 1.5C6.54547 2.32533 7.1997 3 8.00002 3C8.80034 3 9.45456 2.32533 9.45456 1.5C9.45456 0.674668 8.80034 0 8.00002 0Z" fill="currentColor"/>
+                        <path d="M14.5454 0C13.7451 0 13.0909 0.674668 13.0909 1.5C13.0909 2.32533 13.7451 3 14.5454 3C15.3457 3 16 2.32533 16 1.5C16 0.674668 15.3457 0 14.5454 0Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <ul class="toolbar">
+
+
+                    <div class="search_container" style="margin-right: 20px;">
+                        <i class="fa fa-search" aria-hidden="true"></i><input type="text" class='player_search' placeholder="Find a player">
+                    </div>
+
+                    <h4 style="margin: 0px !important; font-family: monospace;">
+                        {% if current_user.is_authenticated %}
+                            {{ current_user.username }}
+                        {% else %}
+                            User239823359
+                        {% endif %}
+                        </h4>
+                    <!-- <li>
+                        <a class="toolbar-link" href="#">
+                            <span class="toolbar-icon">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                    <path d="M7 0C3.13111 0 0 3.13075 0 7C0 10.8688 3.13075 14 7 14C10.8689 14 14 10.8692 14 7C14 3.13111 10.8692 0 7 0ZM7 13.0233C3.67877 13.0233 0.976746 10.3213 0.976746 7C0.976746 3.67875 3.67877 0.976746 7 0.976746C10.3213 0.976746 13.0233 3.67875 13.0233 7C13.0233 10.3213 10.3213 13.0233 7 13.0233Z" fill="#CC00FF"/>
+                                    <path d="M6.79292 8.85721C6.40593 8.85721 6.09265 9.1797 6.09265 9.56667C6.09265 9.94448 6.39671 10.2762 6.79292 10.2762C7.18913 10.2762 7.50238 9.94448 7.50238 9.56667C7.50238 9.1797 7.17989 8.85721 6.79292 8.85721Z" fill="#CC00FF"/>
+                                    <path d="M6.9129 3.48572C5.66898 3.48572 5.09772 4.22288 5.09772 4.72042C5.09772 5.07978 5.40178 5.24564 5.65055 5.24564C6.14813 5.24564 5.94543 4.53613 6.88526 4.53613C7.34595 4.53613 7.71454 4.73885 7.71454 5.16271C7.71454 5.66026 7.19854 5.94589 6.89447 6.20388C6.62724 6.43419 6.27713 6.812 6.27713 7.60443C6.27713 8.08354 6.40614 8.22177 6.7839 8.22177C7.23537 8.22177 7.32752 8.01907 7.32752 7.84396C7.32752 7.36484 7.33673 7.08842 7.84352 6.69221C8.09229 6.49873 8.87547 5.87214 8.87547 5.00603C8.87547 4.13992 8.09229 3.48572 6.9129 3.48572Z" fill="#CC00FF"/>
+                                </svg>
+                            </span>
+                            <span class="toolbar-text">
+                                Rules
+                            </span>
+                        </a>
+                    </li> -->
+                    <!-- <li>
+                        <a class="toolbar-link" href="#">
+                            <span class="toolbar-icon">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                    <path d="M8.23651 5.2977L7.3676 3.53709C7.29851 3.39709 7.15591 3.30847 6.9998 3.30847C6.8437 3.30847 6.7011 3.39712 6.632 3.53709L5.7631 5.2977L3.82016 5.58003C3.66567 5.60247 3.53729 5.7107 3.48906 5.85918C3.4408 6.00765 3.48105 6.17065 3.59283 6.27961L4.99876 7.65006L4.66686 9.58514C4.64048 9.73901 4.70372 9.89454 4.83002 9.9863C4.95635 10.0781 5.12378 10.0902 5.26197 10.0175L6.9998 9.10387L8.73761 10.0175C8.8766 10.0906 9.044 10.0775 9.16956 9.98625C9.29586 9.89448 9.35913 9.73898 9.33272 9.58509L9.00082 7.65L10.4068 6.27956C10.5185 6.1706 10.5588 6.0076 10.5105 5.85912C10.4623 5.71065 10.3339 5.60242 10.1794 5.57997L8.23651 5.2977ZM8.27383 7.21313C8.17717 7.30736 8.13307 7.44312 8.15587 7.57617L8.38373 8.90467L7.19066 8.27746C7.13092 8.24604 7.06535 8.23034 6.9998 8.23034C6.93426 8.23034 6.86869 8.24604 6.80894 8.27746L5.61588 8.90467L5.84374 7.57617C5.86654 7.44312 5.82244 7.30736 5.72578 7.21313L4.76057 6.27229L6.09445 6.07847C6.22805 6.05906 6.34353 5.97514 6.40327 5.85409L6.9998 4.64539L7.59634 5.85409C7.65608 5.97514 7.77158 6.05906 7.90516 6.07847L9.23904 6.27229L8.27383 7.21313Z" fill="#CC00FF"/>
+                                    <path d="M7 0C3.14565 0 0 3.1459 0 7C0 10.8543 3.1459 14 7 14C10.8543 14 14 10.8541 14 7C14 3.14565 10.8541 0 7 0ZM7 13.1797C3.5925 13.1797 0.820312 10.4075 0.820312 7C0.820312 3.5925 3.5925 0.820312 7 0.820312C10.4075 0.820312 13.1797 3.5925 13.1797 7C13.1797 10.4075 10.4075 13.1797 7 13.1797Z" fill="#CC00FF"/>
+                                    <path d="M7 1.64062C4.05677 1.64062 1.64062 4.05653 1.64062 7C1.64062 9.94323 4.05653 12.3594 7 12.3594C9.94323 12.3594 12.3594 9.94347 12.3594 7C12.3594 4.05677 9.94347 1.64062 7 1.64062ZM7 11.5391C4.49714 11.5391 2.46094 9.50286 2.46094 7C2.46094 4.49714 4.49714 2.46094 7 2.46094C9.50286 2.46094 11.5391 4.49714 11.5391 7C11.5391 9.50286 9.50286 11.5391 7 11.5391Z" fill="#CC00FF"/>
+                                </svg>
+                            </span>
+                            <span class="toolbar-text big">
+                                {{ current_user.eligibility }}
+                            </span>
+                        </a>
+                    </li> -->
+                    <li class="drop toolbar-relative" style="margin-left: 15px;">
+                        <a class="drop-toggle toolbar-avatar" href="#">
+                        <!-- <img src="/static/assets/upload/avatar.jpg" alt=""> -->
+                        <style>
+                            .user_icon {
+                                content: url('/static/assets/img/user_astronaut_blue.svg');
+                                max-width: 90%;
+                                padding: 5px;
+                                margin-right: 10px;
+                            }
+                        </style>
+                        <i class="user_icon"></i>
+                        <!-- <img src="data:image/png;base64,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" alt=""> -->
+                        </a>
+                        <div class="drop-content">
+                            <ul>
+                                {% if current_user.is_authenticated %}
+                                <li>
+                                    <a href="/stats/{{ current_user.username }}">
+                                        <span class="drop-menu-icon">
+                                            <i style="content: url('/static/assets/img/stats__black.svg'); max-width:18px;"></i>
+                                            <!-- <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                                <g opacity="0.8" clip-path="url(#clip0_2_128)">
+                                                    <path d="M10.1 19.2H9.1C8.2 19.2 7.5 18.5 7.5 17.6V17.2C7.1 17.1 6.8 16.9 6.4 16.8L6.1 17.1C5.5 17.7 4.5 17.7 3.9 17.1L3.1 16.3C2.5 15.7 2.5 14.7 3.1 14.1L3.4 13.8C3.2 13.5 3.1 13.1 3 12.7H2.6C1.7 12.7 1 12 1 11.1V10.1C1 9.2 1.7 8.5 2.6 8.5H3C3.1 8.1 3.3 7.8 3.4 7.4L3.1 7.1C2.5 6.5 2.5 5.5 3.1 4.9L3.9 4.1C4.5 3.5 5.5 3.5 6.1 4.1L6.4 4.4C6.7 4.2 7.1 4.1 7.5 4V3.6C7.5 2.7 8.2 2 9.1 2H10.2C11.1 2 11.8 2.7 11.8 3.6V4C12.2 4.1 12.5 4.3 12.9 4.4L13.2 4.1C13.8 3.5 14.8 3.5 15.4 4.1L16.2 4.9C16.8 5.5 16.8 6.5 16.2 7.1L15.9 7.4C16.1 7.7 16.2 8.1 16.3 8.5H16.7C17.6 8.5 18.3 9.2 18.3 10.1V11.2C18.3 12.1 17.6 12.8 16.7 12.8H16.3C16.2 13.2 16 13.5 15.9 13.9L16.2 14.2C16.8 14.8 16.8 15.8 16.2 16.4L15.4 17.2C14.8 17.8 13.8 17.8 13.2 17.2L12.9 16.9C12.6 17.1 12.2 17.2 11.8 17.3V17.7C11.7 18.5 11 19.2 10.1 19.2ZM6.6 15.7C7.1 16 7.6 16.2 8.1 16.3C8.3 16.4 8.5 16.6 8.5 16.8V17.5C8.5 17.8 8.8 18.1 9.1 18.1H10.2C10.5 18.1 10.8 17.8 10.8 17.5V16.8C10.8 16.6 11 16.4 11.2 16.3C11.7 16.2 12.3 15.9 12.7 15.7C12.9 15.6 13.1 15.6 13.3 15.8L13.8 16.3C14 16.5 14.4 16.5 14.6 16.3L15.4 15.5C15.6 15.3 15.6 14.9 15.4 14.7L14.9 14.2C14.7 14 14.7 13.8 14.8 13.6C15.1 13.1 15.3 12.6 15.4 12.1C15.5 11.9 15.7 11.7 15.9 11.7H16.6C16.9 11.7 17.2 11.4 17.2 11.1V10.1C17.2 9.8 16.9 9.5 16.6 9.5H15.9C15.7 9.5 15.5 9.3 15.4 9.1C15.2 8.6 15 8 14.7 7.6C14.6 7.4 14.6 7.2 14.8 7L15.3 6.5C15.5 6.3 15.5 5.9 15.3 5.7L14.5 4.9C14.3 4.7 13.9 4.7 13.7 4.9L13.2 5.4C13 5.6 12.8 5.6 12.6 5.5C12.1 5.2 11.6 5 11.1 4.9C10.9 4.8 10.7 4.6 10.7 4.3V3.6C10.7 3.3 10.5 3 10.1 3H9.1C8.7 3 8.5 3.3 8.5 3.6V4.3C8.5 4.5 8.3 4.7 8.1 4.8C7.6 5 7 5.2 6.6 5.5C6.4 5.6 6.1 5.5 6 5.4L5.4 4.8C5.2 4.6 4.8 4.6 4.6 4.8L3.8 5.6C3.6 5.8 3.6 6.2 3.8 6.4L4.4 7C4.6 7.2 4.6 7.4 4.5 7.6C4.2 8 4 8.6 3.8 9.1C3.8 9.3 3.6 9.5 3.3 9.5H2.6C2.3 9.5 2 9.7 2 10.1V11.2C2 11.5 2.3 11.8 2.6 11.8H3.3C3.5 11.8 3.7 12 3.8 12.2C3.9 12.7 4.2 13.3 4.4 13.7C4.5 13.9 4.5 14.1 4.3 14.3L3.8 14.8C3.6 15 3.6 15.4 3.8 15.6L4.6 16.4C4.8 16.6 5.2 16.6 5.4 16.4L6 15.8C6.1 15.7 6.3 15.6 6.6 15.7Z" fill="currentColor"/>
+                                                    <path d="M9.60002 14.3C7.50002 14.3 5.90002 12.6 5.90002 10.6C5.90002 8.60002 7.60002 6.90002 9.60002 6.90002C11.6 6.90002 13.3 8.60002 13.3 10.6C13.3 12.6 11.7 14.3 9.60002 14.3ZM9.60002 7.90002C8.10002 7.90002 6.90002 9.10002 6.90002 10.6C6.90002 12.1 8.10002 13.3 9.60002 13.3C11.1 13.3 12.3 12.1 12.3 10.6C12.3 9.10002 11.1 7.90002 9.60002 7.90002Z" fill="currentColor"/>
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_2_128">
+                                                        <rect width="17.2" height="17.2" fill="white" transform="translate(1 2)"/>
+                                                    </clipPath>
+                                                </defs>
+                                            </svg> -->
+                                        </span>
+                                        <span class="drop-menu-text">
+                                            My Stats
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="/challenges">
+                                        <span class="drop-menu-icon">
+                                            <i style="content: url('/static/assets/img/swords__black.svg'); max-width:12px; position:absolute; margin-top: 3px;"></i>
+                                            <!-- <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                                <g opacity="0.8" clip-path="url(#clip0_2_128)">
+                                                    <path d="M10.1 19.2H9.1C8.2 19.2 7.5 18.5 7.5 17.6V17.2C7.1 17.1 6.8 16.9 6.4 16.8L6.1 17.1C5.5 17.7 4.5 17.7 3.9 17.1L3.1 16.3C2.5 15.7 2.5 14.7 3.1 14.1L3.4 13.8C3.2 13.5 3.1 13.1 3 12.7H2.6C1.7 12.7 1 12 1 11.1V10.1C1 9.2 1.7 8.5 2.6 8.5H3C3.1 8.1 3.3 7.8 3.4 7.4L3.1 7.1C2.5 6.5 2.5 5.5 3.1 4.9L3.9 4.1C4.5 3.5 5.5 3.5 6.1 4.1L6.4 4.4C6.7 4.2 7.1 4.1 7.5 4V3.6C7.5 2.7 8.2 2 9.1 2H10.2C11.1 2 11.8 2.7 11.8 3.6V4C12.2 4.1 12.5 4.3 12.9 4.4L13.2 4.1C13.8 3.5 14.8 3.5 15.4 4.1L16.2 4.9C16.8 5.5 16.8 6.5 16.2 7.1L15.9 7.4C16.1 7.7 16.2 8.1 16.3 8.5H16.7C17.6 8.5 18.3 9.2 18.3 10.1V11.2C18.3 12.1 17.6 12.8 16.7 12.8H16.3C16.2 13.2 16 13.5 15.9 13.9L16.2 14.2C16.8 14.8 16.8 15.8 16.2 16.4L15.4 17.2C14.8 17.8 13.8 17.8 13.2 17.2L12.9 16.9C12.6 17.1 12.2 17.2 11.8 17.3V17.7C11.7 18.5 11 19.2 10.1 19.2ZM6.6 15.7C7.1 16 7.6 16.2 8.1 16.3C8.3 16.4 8.5 16.6 8.5 16.8V17.5C8.5 17.8 8.8 18.1 9.1 18.1H10.2C10.5 18.1 10.8 17.8 10.8 17.5V16.8C10.8 16.6 11 16.4 11.2 16.3C11.7 16.2 12.3 15.9 12.7 15.7C12.9 15.6 13.1 15.6 13.3 15.8L13.8 16.3C14 16.5 14.4 16.5 14.6 16.3L15.4 15.5C15.6 15.3 15.6 14.9 15.4 14.7L14.9 14.2C14.7 14 14.7 13.8 14.8 13.6C15.1 13.1 15.3 12.6 15.4 12.1C15.5 11.9 15.7 11.7 15.9 11.7H16.6C16.9 11.7 17.2 11.4 17.2 11.1V10.1C17.2 9.8 16.9 9.5 16.6 9.5H15.9C15.7 9.5 15.5 9.3 15.4 9.1C15.2 8.6 15 8 14.7 7.6C14.6 7.4 14.6 7.2 14.8 7L15.3 6.5C15.5 6.3 15.5 5.9 15.3 5.7L14.5 4.9C14.3 4.7 13.9 4.7 13.7 4.9L13.2 5.4C13 5.6 12.8 5.6 12.6 5.5C12.1 5.2 11.6 5 11.1 4.9C10.9 4.8 10.7 4.6 10.7 4.3V3.6C10.7 3.3 10.5 3 10.1 3H9.1C8.7 3 8.5 3.3 8.5 3.6V4.3C8.5 4.5 8.3 4.7 8.1 4.8C7.6 5 7 5.2 6.6 5.5C6.4 5.6 6.1 5.5 6 5.4L5.4 4.8C5.2 4.6 4.8 4.6 4.6 4.8L3.8 5.6C3.6 5.8 3.6 6.2 3.8 6.4L4.4 7C4.6 7.2 4.6 7.4 4.5 7.6C4.2 8 4 8.6 3.8 9.1C3.8 9.3 3.6 9.5 3.3 9.5H2.6C2.3 9.5 2 9.7 2 10.1V11.2C2 11.5 2.3 11.8 2.6 11.8H3.3C3.5 11.8 3.7 12 3.8 12.2C3.9 12.7 4.2 13.3 4.4 13.7C4.5 13.9 4.5 14.1 4.3 14.3L3.8 14.8C3.6 15 3.6 15.4 3.8 15.6L4.6 16.4C4.8 16.6 5.2 16.6 5.4 16.4L6 15.8C6.1 15.7 6.3 15.6 6.6 15.7Z" fill="currentColor"/>
+                                                    <path d="M9.60002 14.3C7.50002 14.3 5.90002 12.6 5.90002 10.6C5.90002 8.60002 7.60002 6.90002 9.60002 6.90002C11.6 6.90002 13.3 8.60002 13.3 10.6C13.3 12.6 11.7 14.3 9.60002 14.3ZM9.60002 7.90002C8.10002 7.90002 6.90002 9.10002 6.90002 10.6C6.90002 12.1 8.10002 13.3 9.60002 13.3C11.1 13.3 12.3 12.1 12.3 10.6C12.3 9.10002 11.1 7.90002 9.60002 7.90002Z" fill="currentColor"/>
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_2_128">
+                                                        <rect width="17.2" height="17.2" fill="white" transform="translate(1 2)"/>
+                                                    </clipPath>
+                                                </defs>
+                                            </svg> -->
+                                        </span>
+                                        <span class="drop-menu-text">
+                                            Challenges
+                                        </span>
+                                    </a>
+                                </li>
+                                
+                                
+                                <li>
+                                    <a href="/logout">
+                                        <span class="drop-menu-icon">
+                                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                                <path d="M4.75 1.25L2.75 1.25C1.64543 1.25 0.75 2.14543 0.75 3.25L0.75 12.25C0.749999 13.3546 1.64543 14.25 2.75 14.25L4.75 14.25" stroke="currentColor" stroke-linecap="round"/>
+                                                <path d="M14.25 7.75L5.25 7.75M14.25 7.75L10.75 4.75M14.25 7.75L10.75 10.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </span>
+                                        <span class="drop-menu-text">
+                                        Logout
+                                        </span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li>
+                                    <a style='cursor: pointer' data-toggle="modal" data-target="#panel-modal2" id="login_window_btn">
+                                        <span class="drop-menu-icon">
+                                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                                <path d="M4.75 1.25L2.75 1.25C1.64543 1.25 0.75 2.14543 0.75 3.25L0.75 12.25C0.749999 13.3546 1.64543 14.25 2.75 14.25L4.75 14.25" stroke="currentColor" stroke-linecap="round"/>
+                                                <path d="M14.25 7.75L5.25 7.75M14.25 7.75L10.75 4.75M14.25 7.75L10.75 10.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </span>
+                                        <span class="drop-menu-text">
+                                        Login
+                                        </span>
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <a style='cursor: pointer' data-toggle="modal" data-target="#panel-modal-register" id="register_window_btn">
+                                        <span class="drop-menu-icon">
+                                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="https://www.w3.org/2000/svg">
+                                                <path d="M4.75 1.25L2.75 1.25C1.64543 1.25 0.75 2.14543 0.75 3.25L0.75 12.25C0.749999 13.3546 1.64543 14.25 2.75 14.25L4.75 14.25" stroke="currentColor" stroke-linecap="round"/>
+                                                <path d="M14.25 7.75L5.25 7.75M14.25 7.75L10.75 4.75M14.25 7.75L10.75 10.75" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </span>
+                                        <span class="drop-menu-text">
+                                        Create Account
+                                        </span>
+                                    </a>  
+                                </li>
+                         
+                                {% endif %}
+
+
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</header>

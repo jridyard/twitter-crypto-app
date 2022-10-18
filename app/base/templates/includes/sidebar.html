@@ -1,0 +1,41 @@
+
+    <div class="sidebar" data="{{ current_user.color_preference }}">
+      <div class="sidebar-wrapper">
+        <div class="logo">
+          <a target="_blank" rel="noopener noreferrer"
+             href="https://appseed.us/admin-dashboards/flask-dashboard-black-pro" class="simple-text logo-mini">
+            TDA
+          </a>
+          <a target="_blank" rel="noopener noreferrer"
+             href="https://appseed.us/admin-dashboards/flask-dashboard-black-pro" class="simple-text logo-normal" id="subscription_tier">
+             {{ current_user.subscription }}
+          </a>
+        </div>
+
+          <ul class="nav">
+
+              <li class="{% if 'influencers' in request.url %} active {% endif %}">
+                <a href="/influencers">
+                  <i class="fa-solid fa-users"></i>
+                  <p>Influencers</p>
+                </a>
+              </li>
+              
+              <li class="{% if 'tweets' in request.url %} active {% endif %}">
+                <a href="/tweets">
+                  <i class="fa-brands fa-twitter"></i>
+                  <p>Tweets</p>
+                </a>
+              </li>
+            
+              <li class="{% if 'tokens' in request.url %} active {% endif %}">
+                <a href="/tokens">
+                  <i class="fa-brands fa-ethereum"></i>
+                  <p>Tokens</p>
+                </a>
+              </li>
+
+          </ul>
+
+      </div>
+    </div>

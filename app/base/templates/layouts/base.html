@@ -1,0 +1,86 @@
+<!--
+ =========================================================
+* Black Dashboard PRO - v1.1.1
+=========================================================
+
+* Product Page: https://themes.getbootstrap.com/product/black-dashboard-pro-premium-bootstrap-4-admin/
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
+    <!-- <link rel="icon" type="image/png" href="/static/assets/img/favicon.png"> -->
+    <link rel="icon" type="image/png" href="/static/assets/img/tokeneer.jpg">
+
+    <title>
+        Tokeneer - {% block title %} {% endblock title %}
+    </title>
+
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <!-- Nucleo Icons -->
+    <link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="/static/assets/css/black-dashboard.css?v=1.1.1" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="/static/assets/demo/demo.css" rel="stylesheet" />
+    <link href="static/assets/css/three-dots-white.min.css" rel="stylesheet" />
+    <!-- Specific Page CSS goes HERE  -->
+    {% block stylesheets %}{% endblock stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body class="sidebar-mini {% block bodyclass %}{% endblock %} {% if current_user.theme_preference == 'Light' %}white-content{% endif %}">
+
+    <div class="wrapper">
+
+        <div class="navbar-minimize-fixed">
+        <button class="minimize-sidebar btn btn-link btn-just-icon">
+            <i class="tim-icons icon-align-center visible-on-sidebar-regular text-muted"></i>
+            <i class="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted"></i>
+        </button>
+        </div>
+
+        {% include 'includes/sidebar.html' %}
+
+        <div class="main-panel" data="{{ current_user.color_preference }}">
+
+            {% include 'includes/navigation.html' %}
+
+            <div class="content">
+
+                {% block content %}{% endblock content %}
+
+            </div>
+
+            {% include 'includes/footer.html' %}
+
+        </div>
+
+    </div>
+
+    {% include 'includes/fixed-plugin.html' %}
+
+    {% include 'includes/scripts.html' %}
+    
+
+    {% include 'includes/scripts-sidebar.html' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+</html>

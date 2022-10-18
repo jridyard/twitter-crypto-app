@@ -1,0 +1,5 @@
+'backups_inactive' Folder:
+
+- Used to place deprecated functions, styling, and html templates.
+
+*** 'backups_inactive' has no impact on the app running :: Can be deleted safely ***

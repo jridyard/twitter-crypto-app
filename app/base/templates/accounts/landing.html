@@ -1,0 +1,366 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Timeline {% endblock title %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+  .badge-pill {
+    font-size: 14px;
+    text-transform: capitalize;
+  }
+
+  .section {
+    margin-top: 50px;
+  }
+
+  .card.card-timeline .timeline-badge.warning {
+    background-color: #b933d4 !important; /* b933d4 */
+  }
+
+  .badge-warning {
+    color: #ffffff;
+    background-color: #b933d4;
+  }
+</style>
+<!-- C:\Users\ReprovedCandy\app_template\app\base\static\assets\img\ticket-assistant-logo-svg.svg -->
+  <div class="header text-center">
+    <img src="static/assets/img/ticket-assistant-logo-svg.svg" alt="" style="max-width: 15%">
+    <h3 class="title">Tokeneer</h3>
+    <div class="timeline-body">
+      <p>
+        How we help you work with your purchasers to make decisions faster.
+      </p>
+    </div>
+  </div>
+  <div class="row" style=" margin-top: 20px;">
+    <div class="col-md-12">
+      <div class="card card-timeline card-plain">
+        <div class="card-body">
+          <ul class="timeline">
+            <li class="timeline-inverted">
+              <div class="timeline-badge info">
+                <i class="fa-solid fa-cart-shopping"></i>
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <span class="badge badge-pill badge-info">Purchaser Enters Checkout Page</span>
+                </div>
+                <div class="timeline-body">
+                  <p>
+                    When a ticket checkout page loads, <b><u>relevant event and ticket details</u></b> are captured and <b><u>sent to your discord</u></b>.
+                  </p>
+                </div>
+                <!-- <h6>
+                  <i class="ti-time"></i> 3 Seconds
+                </h6> -->
+              </div>
+            </li>
+            <li>
+              <div class="timeline-badge discord">
+                <i class="fa-brands fa-discord"></i>
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <span class="badge badge-pill badge-discord">Details Available In Discord</span>
+                </div>
+                <div class="timeline-body">
+                  <p>
+                    You can view the details on the tickets/event and click a yes or no button.
+                    Your <b><u>decision to buy or pass</u></b> will be <b><u>sent directly to your purchasers browser</u></b>.
+                  </p>
+                </div>
+                <!-- <h6>
+                  <i class="ti-time"></i> 1 Second
+                </h6> -->
+              </div>
+            </li>
+            <li class="timeline-inverted">
+              <div class="timeline-badge warning">
+                <i class="fa-brands fa-chrome"></i>
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <span class="badge badge-pill badge-warning">Decision Sent To Purchaser</span>
+                </div>
+                <div class="timeline-body">
+                  <p>
+                    Your purchaser's browser will receive your decision and launch a popup in the checkout page with the details. It will also change the tab color
+                    to green or red so they can easily see when you've made a decision, even with lots of open tabs.
+                  </p>
+                </div>
+                <!-- <h6>
+                  <i class="ti-time"></i> Instant
+                </h6> -->
+              </div>
+            </li>
+            <li>
+              <div class="timeline-badge success">
+                <i class="fa-solid fa-ticket"></i>
+              </div>
+              <div class="timeline-panel">
+                <div class="timeline-heading">
+                  <span class="badge badge-pill badge-success">Tickets Purchased</span>
+                </div>
+                <div class="timeline-body">
+                  <p>Just like that, your purchaser will finish buying the tickets.</p>
+                </div>
+                <!-- <h6>
+                  <i class="ti-time"></i>Complete
+                </h6> -->
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="row">
+      <div class="col-md-12 header text-center" style="margin-bottom: 50px;">
+        <h3 class="title">Pricing</h3>
+        <div class="timeline-body">
+          <p>
+            Scale your ticket buying business with ease and add users as you grow.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-pricing card-primary">
+          <div class="card-body">
+            <h1 class="card-title">pro</h1>
+            <img class="card-img" src="/static/assets/img/card-primary.png" alt="Image">
+            <ul class="list-group">
+              <li class="list-group-item">51+ Buyers</li>
+              <!-- <li class="list-group-item">Unlimited purchasers</li> -->
+            </ul>
+            <div class="card-prices">
+              <h3 class="text-on-front">
+                <span>$</span>33<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+              <h5 class="text-on-back">33</h5>
+              <p class="plan">Professional plan</p>
+            </div>
+          </div>
+          <div class="card-footer text-center mb-3 mt-3">
+            <button class="btn btn-round btn-just-icon btn-primary">Upgrade</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-pricing card-success card-white">
+          <div class="card-body">
+            <h1 class="card-title">tier 3</h1>
+            <img class="card-img" src="/static/assets/img/card-success.png" alt="Image">
+            <ul class="list-group">
+              <li class="list-group-item">16 - 50 Buyers</li>
+              <!-- <li class="list-group-item">30 purchasers</li> -->
+            </ul>
+            <div class="card-prices">
+              <h3 class="text-on-front">
+                <span>$</span>37<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+              <h5 class="text-on-back">37</h5>
+              <p class="plan">Medium plan</p>
+            </div>
+          </div>
+          <div class="card-footer text-center mb-3 mt-3">
+            <button class="btn btn-round btn-just-icon btn-success">Upgrade</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-pricing card-warning card-raised card-white">
+          <div class="card-body">
+            <h1 class="card-title">tier 2</h1>
+            <img class="card-img" src="/static/assets/img/card-warning.png" alt="Image">
+            <ul class="list-group">
+              <li class="list-group-item">6 - 15 Buyers</li>
+              <!-- <li class="list-group-item">10 purchasers</li> -->
+            </ul>
+            <div class="card-prices">
+              <h3 class="text-on-front">
+                <span>$</span>41<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+                <h5 class="text-on-back">41</h5>
+              <p class="plan">Basic plan</p>
+            </div>
+          </div>
+          <div class="card-footer text-center mb-3 mt-3">
+            <button class="btn btn-round btn-just-icon btn-warning">Upgrade</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card card-pricing card-danger card-white">
+          <div class="card-body">
+            <h1 class="card-title">tier 1</h1>
+            <img class="card-img" src="/static/assets/img/card-danger.png" alt="Image">
+            <ul class="list-group">
+              <li class="list-group-item">1 - 5 Buyers</li>
+              <!-- <li class="list-group-item">3 Purchasers</li> -->
+              <!-- <li class="list-group-item">24/7 Support</li> -->
+            </ul>
+            <div class="card-prices">
+              <h3 class="text-on-front">
+                <span>$</span>45<sub style="font-size: 36%; padding-left: 3px; bottom: -0.05em">/ mo <sub style="font-size: 57%; bottom: 0em">/ user</sub></sub></h3>
+              <h5 class="text-on-back">45</h5>
+              <p class="plan">Starter plan</p>
+            </div>
+          </div>
+          <div class="card-footer text-center mb-3 mt-3">
+            <button class="btn btn-round btn-just-icon btn-danger">Get Started</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </section>
+
+  <section class="section" style="margin-top: 80px;">
+    <div class="row">
+      <div class="col-md-3">
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+
+          <div id="request-access-form">
+            <div class="card-header">
+              <h4 class="card-title text-center">Request Access</h4>
+              <p class="text-center">We offer a free trial with 1,000 credits. It requires an access token which we can send over to you.</p>
+            </div>
+            <div class="card-body">
+              <form action="#">
+                <div class="form-group">
+                  <input required type="text" class="form-control" id="email" placeholder="Email or Discord" minlength="5">
+                </div>
+              </form>
+            </div>
+            <div class="card-footer text-center">
+              <!-- <button type="submit" class="btn btn-fill btn-primary" id="submit-form">Submit</button> -->
+              <button type='button' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' id="finish_button">
+                <!-- Finish -->
+                <span id="finish_text">Submit Request</span>
+                <div id="loading_outer">
+                  <div id="finish_loading" style="display: none;" class="dot-flashing"></div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div id="success" style="display: none;">
+            <div class="card-header">
+              <h4 class="card-title text-center">Your request has been submitted!</h4>
+            </div>
+          </div>
+  
+          <div id="failure" style="display: none;">
+            <div class="card-header">
+              <h4 class="card-title text-center">Your request has been submitted!</h4>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-3">
+      </div>
+    </div>
+
+  </section>
+  <script>
+    document.querySelector('#finish_button').addEventListener('click', async () => {
+      const email = document.querySelector('#email').value
+
+      if (email.length < 1) {
+        Swal.fire({
+            icon: 'error',
+            title: `Whoops!`,
+            text: "Please enter something for your email or discord. Otherwise, we can\'t get back to you with an access code.",
+            confirmButtonText: "Ok",
+            showCloseButton: false
+        })
+        return
+      }
+
+      document.querySelector('#finish_text').style.display = 'none'
+      document.querySelector('#loading_outer').style.padding = '5px 25px'
+      document.querySelector('#finish_loading').style.display = 'block'
+
+      const wasMessageSent = await fetch("https://webflow.com/api/v1/form/6293a8277925c5fa35fedfb8", {
+        "headers": {
+          "accept": "application/json, text/javascript, */*; q=0.01",
+          "accept-language": "en-US,en;q=0.9",
+          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"104\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "cross-site"
+        },
+        "referrer": "https://www.outsize.io/",
+        "referrerPolicy": "strict-origin-when-cross-origin",
+        "body": `name=Contact+Form&source=https%3A%2F%2FTicket%20Decision%20Assistant%2Ffetch-forms%2Fticket-decision-assistant&test=false&fields%5BEmail%5D=${email}&fields%5BPhone%5D=${"Ticket%20Decision%20Assistant"}&fields%5BMessage%5D=&dolphin=false`,
+        "method": "POST",
+        "mode": "cors",
+        "credentials": "omit"
+      }).then(response => {
+        return response
+      }).catch(err => {
+        console.error(err)
+        return 'Message Not Sent'
+      })
+
+      if (wasMessageSent.status == 200) {
+        
+          setTimeout(() => {
+            document.querySelector('#finish_text').style.display = 'block'
+            document.querySelector('#finish_loading').style.display = 'none'
+            document.querySelector('#loading_outer').style.padding = '0px'
+
+            Swal.fire({
+                icon: 'success',
+                title: `Request Received!`,
+                text: "We will get back to you shortly with an access code.",
+                confirmButtonText: "Sounds good",
+                showCloseButton: false
+            }).then(response => {
+                document.querySelector('#success').style.display = 'block'
+                document.querySelector('#request-access-form').style.display = 'none'
+            })
+          }, 400);
+          return
+      }
+
+      document.querySelector('#finish_text').style.display = 'block'
+      document.querySelector('#finish_loading').style.display = 'none'
+      document.querySelector('#loading_outer').style.padding = '0px'
+
+      if (true) {
+        Swal.fire({
+            icon: 'error',
+            title: `Uh Oh!`,
+            text: "This channel has already been registered.",
+            confirmButtonText: "Let's change it.",
+            showCloseButton: true
+        }).then(response => {
+          console.log(response)
+          if (response.isConfirmed) {
+            document.querySelector('#channel_url_tab').click()
+          }
+        })
+      }
+
+      console.log(wasMessageSent)
+    })
+  </script>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,6 @@
+'resources' Folder:
+
+- Used to create reminders for functions you use often. (python / js)
+- Used to create templates for HTML elements as formatting reminders.
+
+*** 'resources' has no impact on the app running :: Can be deleted safely ***

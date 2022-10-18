@@ -1,0 +1,871 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tables Extended {% endblock title %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<style>
+
+
+  .activate-license-button {
+    padding: 8px 15px !important;
+    border-radius: 30px;
+    margin-right: 20px;
+  }
+
+  .deactivate-license-button {
+    padding: 8px 20px !important;
+    border-radius: 30px;
+    margin-right: 20px;
+
+  }
+
+  .discord-auth-link {
+    font-size: 1rem;
+    color: white;
+  }
+
+  .discord-auth-link:hover {
+    color: rgba(255, 255, 255, 0.671);
+  }
+
+  .card-stats .info-icon i {
+      color: #ffffff;
+      font-size: 1.7em;
+      padding: 14px 9px;
+  }
+
+  .card-stats .info-icon.icon-warning {
+      background: #5865f2 !important;
+      /* background-image: linear-gradient(to bottom left, #ff8d72, #ff6491, #ff8d72); */
+      background-size: 210% 210%;
+      background-position: top right;
+  }
+
+  .no-overflow {
+    overflow-x: hidden !important;
+  }
+
+  .card-button-footer {
+    margin: 10px;
+  }
+
+.discord-button {
+  background: #5865f2 !important
+}
+
+.discord-button:hover {
+  background: #4553ee !important
+}
+
+.discord-button:focus {
+  background: #5f6bf0 !important
+}
+
+.discord-button:active {
+  background: #5f6bf0 !important
+}
+</style>
+
+<div class="row"  style="margin-left: 0px;">
+  
+  <div class="col-lg-3 col-md-6">
+    <div class="card card-stats">
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-5">
+            <div class="info-icon text-center icon-primary">
+              <i class="tim-icons icon-single-02"></i>
+            </div>
+          </div>
+          <div class="col-7">
+            <div class="numbers">
+              <p class="card-category">Licenses Activated</p>
+              <h3 class="card-title"><span id="licenses_activated">{{ current_user.activated_licenses }}</span> / <span id="licenses_available">{{ current_user.licenses }}</span></h3>
+              <!-- <p class="card-category">Licenses Active: 4 / 5</p> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <hr>
+        <div class="text-center">
+          <button class="btn btn-primary btn-sm card-button-footer" id="add_remove_licenses">Add or Remove Licenses</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="col-lg-3 col-md-6">
+    <div class="card card-stats">
+
+      <div class="card-body">
+        <div class="row">
+          <div class="col-2">
+            <div class="info-icon text-center icon-warning">
+              <i class="fa-brands fa-discord"></i>
+            </div>
+          </div>
+          <div class="col-10">
+            <div class="numbers">
+              <p class="card-category">Discord Channel</p>
+              <h3 class="card-title">
+                <a href="" style="font-weight: 300 !important" id="channel_info" copystring="{{ channel_url }}" class="copy-click" data-tooltip-text="Click to copy channel URL" data-tooltip-text-copied="✔ Copied to clipboard">{{ channel_id }}</a> 
+              </h3>
+              <p class="card-category"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <hr>
+        <div class="text-center">
+          <button class="btn btn-sm card-button-footer discord-button" id="change_discord_channel">Change Channel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <!-- spacer div -->
+  </div>
+
+</div>
+
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="tools float-right">
+            <div class="dropdown">
+              <button type="button" class="btn btn-default dropdown-toggle btn-link btn-icon" data-toggle="dropdown">
+                <i class="tim-icons icon-settings-gear-63"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item text-danger" href="#">Delete Purchaser</a>
+              </div>
+            </div>
+          </div>
+          <h4 class="card-title">
+            <button type='button' class='btn btn-finish btn-fill btn-primary btn-wd' name='finish' id="finish_button">
+              <!-- Finish -->
+              <span id="finish_text">+ Add Purchaser</span>
+              <div id="loading_outer">
+                <div id="finish_loading" style="display: none;" class="dot-flashing"></div>
+              </div>
+            </button>
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sortable table-striped" data-toggle="table" data-sort-name="date" data-sort-order="desc" id="example">
+              <thead class="text-primary">
+                <tr>
+                  <th class="text-center">
+                    #
+                  </th>
+                  <th>
+                    Purchaser Name
+                  </th>
+                  <th>
+                    Account Connected (Status)
+                  </th>
+                  <th>
+                    Messages Sent
+                  </th>
+                  <th class="text-center">
+                    Manage Licenses
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="purchasers_table_body">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+<!-- 
+    <script>
+      $(document).ready(function() {
+          $('#example').DataTable();
+        });
+    </script> -->
+
+  </div>
+
+  <script>
+    function waitForElm(selector) {
+      return new Promise(resolve => {
+          if (document.querySelector(selector)) {
+              return resolve(document.querySelector(selector))
+          }
+          let observer = new MutationObserver(mutations => {
+              if (document.querySelector(selector)) {
+                  resolve(document.querySelector(selector))
+                  observer.disconnect();
+              }
+          });
+          observer.observe(document.body, {
+              childList: true,
+              subtree: true
+          })
+      })
+  }    
+
+  waitForElm(selector='#purchasers_table_body').then(async (tbody) => { // this is the container for the multiple compose tab sections, if its removed we are on zero
+      let purchaser_data = await fetch("/api/get_purchasers", {
+          "method": "GET",
+      }).then((response) => response.json())
+      .then((data) => {
+          console.log('got purchasers')
+          console.log(data)
+          return data['response']
+      });
+
+      let html = ''
+      for (var i=0; i < purchaser_data.length; i++) {
+        console.log('sdsdsd')
+        let username = purchaser_data[i].name
+        let purchaser_activiation_code = purchaser_data[i].purchaser_activiation_code
+        let hasAccountBeenConnected = purchaser_data[i].account_connected // custom datapoint, not in db, config on backend in route
+        let messages_total = purchaser_data[i].messages_total
+        let license_activated = purchaser_data[i].license_activated
+        
+        html += `
+          <tr>
+            <td class="text-center">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" checked="">
+                  <span class="form-check-sign"></span>
+                </label>
+              </div>
+            </td>
+            <td>
+              <a href="" copystring="${purchaser_activiation_code}" class="copy-click" data-tooltip-text="Click to copy activation code" data-tooltip-text-copied="✔ Copied to clipboard">${username}</a> 
+            </td>
+            <td>
+              ${ license_activated == "Revoked" ? "Revoked Due To Unusual Activity" : hasAccountBeenConnected }
+            </td>
+            <td>
+              ${ messages_total }
+            </td>
+            <td class="text-center">
+              ${ license_activated == 'True' ? `
+                <button class="btn btn-danger deactivate-license-button"  purchaser="${username}">
+                  <span id="before_loading_text"><i class="fa-solid fa-user-xmark"></i> &nbsp;Cancel License</span>
+                    <div id="loading_outer">
+                      <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                    </div>
+                </button>
+                ` : license_activated == "False" ? `
+              <button class="btn btn-primary activate-license-button" purchaser="${username}">
+                <span id="before_loading_text"><i class="fa-solid fa-user-check"></i> &nbsp;Activate License</span>
+                <div id="loading_outer">
+                  <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                </div>
+              </button>
+
+              ` : `
+                <span style="margin-right: 20px;">Account Disabled</span>
+              `
+            
+            }
+            </td>
+          </tr>
+        `
+      }
+
+      tbody.innerHTML = html
+
+      instantiateCopyToClip()
+      if (purchaser_data.length >= 1) { $('#example').DataTable() } 
+  });
+
+
+  // old button:
+  // <button class="btn btn-primary btn-round less-padded-button" style="margin-right: 22px;">
+  //   <i class="fa-solid fa-user-check"></i> &nbsp;Activate License
+  // </button>
+</script>
+
+<script>
+      document.querySelector('#finish_button').addEventListener('click', async () => {
+
+          Swal.fire({
+            title: 'New Purchaser Name:',
+            input: 'text',
+            inputAttributes: {
+              autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Create Purchaser',
+            showLoaderOnConfirm: true,
+            preConfirm: (purchaserName) => {
+              return fetch(`/api/add_purchaser`, {
+                "headers": {
+                  'content-type': 'application/json'
+                },
+                'method': 'POST',
+                "body": JSON.stringify({
+                  'purchaser_name': purchaserName
+                })
+              })
+                .then(async (response) => {
+                  console.log(response)
+                  if (!response.ok) {
+                    await response.json().then(json => {
+                      console.log(json)
+                      window.error_json = json
+                      throw new Error(response.statusText)
+                    })
+                  }
+                  return response.json()
+                })
+                .catch(error => {
+                  let json_error = window.error_json
+                  Swal.showValidationMessage(
+                    `Request failed: ${Object.keys(json_error).includes('error_message') ? json_error.error_message : error}`
+                  )
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+              console.log(result)
+              Swal.fire({
+                  icon: 'success',
+                  customClass: {
+                    body: 'no-overflow'
+                  },
+                  title: `${result.value.purchaser_name}\'s account is setup and ready to go!`,
+                  html: `<p class="swal-p" style="padding: 10px 30px;" >Have ${result.value.purchaser_name} paste this activation code in the browser extension popup window: 
+                    <a href="" copystring="${result.value.purchaser_activiation_code}" class="copy-click" data-tooltip-text="Click to copy activation code" data-tooltip-text-copied="✔ Copied to clipboard">${result.value.purchaser_activiation_code}
+                      </p>`,
+                  showConfirmButton: false,
+                  showCloseButton: true
+              })
+              instantiateCopyToClip()
+              if (result.value.license_activation_status == "True") {
+                let licenses_activated = parseInt(document.querySelector('#licenses_activated').textContent)
+                licenses_activated += 1
+                document.querySelector('#licenses_activated').textContent = licenses_activated
+              }
+
+              document.querySelector('#purchasers_table_body').innerHTML += `
+                        <tr>
+                          <td class="text-center">
+                            <div class="form-check">
+                              <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" checked="">
+                                <span class="form-check-sign"></span>
+                              </label>
+                            </div>
+                          </td>
+                          <td>
+                            <a href="" copystring="${result.value.purchaser_activiation_code}" class="copy-click" data-tooltip-text="Click to copy activation code" data-tooltip-text-copied="✔ Copied to clipboard">${result.value.purchaser_name}</a> 
+                          </td>
+                          <td>
+                            Not Connected
+                          </td>
+                          <td>
+                            0
+                          </td>
+                          <td class="text-center">
+                            ${
+                              result.value.license_activation_status == "True" ? `
+                                  <button class="btn btn-danger deactivate-license-button"  purchaser="${result.value.purchaser_name}">
+                                    <span id="before_loading_text"><i class="fa-solid fa-user-xmark"></i> &nbsp;Cancel License</span>
+                                      <div id="loading_outer">
+                                        <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                                      </div>
+                                  </button>
+                                  ` : result.value.license_activation_status == "False" ? `
+                                <button class="btn btn-primary activate-license-button" purchaser="${result.value.purchaser_name}">
+                                  <span id="before_loading_text"><i class="fa-solid fa-user-check"></i> &nbsp;Activate License</span>
+                                  <div id="loading_outer">
+                                    <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                                  </div>
+                                </button>
+
+                                ` : `
+                                  <span style="margin-right: 20px;">Unkown License Activation Issue, Please Refersh Page</span>
+                                `
+                            }
+                          </td> 
+                  `
+                  $('#example').DataTable();
+                  instantiateCopyToClip()
+            }
+          })
+
+          return
+
+        })
+
+</script>
+
+<script>
+  document.querySelector('#change_discord_channel').addEventListener('click', async () => {
+
+    Swal.fire({
+      title: 'New Channel URL:',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Confirm URL Change',
+      showLoaderOnConfirm: true,
+      preConfirm: (channel_url) => {
+        return fetch(`/api/change_channel`, {
+          "headers": {
+            'content-type': 'application/json'
+          },
+          'method': 'POST',
+          "body": JSON.stringify({
+            'channel_url': channel_url
+          })
+        })
+          .then(async (response) => {
+            if (!response.ok) {
+              await response.json().then(json => {
+                console.log(json)
+                window.error_json = json
+                throw new Error(response.statusText)
+              })
+            }
+            return response.json()
+          })
+          .catch(error => {
+            let json_error = window.error_json
+            Swal.showValidationMessage(
+              `Request failed: ${Object.keys(json_error).includes('error_message') ? json_error.error_message : error}`
+            )
+          })
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+            icon: 'success',
+            title: `Your new discord channel is configured.`,
+            html: `<p>Make sure to <b><u>authorize the Tokeneer bot</u> for your new channel</b> or it won\'t work!<p>`,
+            showConfirmButton: true,
+            confirmButtonText: '<a class="discord-auth-link"  href="https://discord.com/api/oauth2/authorize?client_id=1006240168140865626&permissions=8&scope=bot" target="_blank">Authorize Here</a>',
+            showCloseButton: true
+        })
+        document.querySelector('#channel_info').outerHTML = `
+          <a href="" id="channel_info" copystring="${result.value.channel_url}" class="copy-click" data-tooltip-text="Click to copy channel URL" data-tooltip-text-copied="✔ Copied to clipboard">${result.value.channel_id}</a>
+        `
+        instantiateCopyToClip()
+  }
+})
+
+return
+
+})
+
+</script>
+
+<script>
+  function buttonLoading(element, deactivate=null) {
+    if (element.querySelector('#before_loading_text') == null) {
+      element = element.closest("button")
+    }
+    element.style['pointer-events'] = 'none'
+    element.querySelector('#before_loading_text').style.display = 'none'
+    element.querySelector('#loading_dots').style.display = 'block'
+    element.querySelector('#loading_dots').style.margin = deactivate ? '5px 60px' : '4px 65px'
+  }
+
+  function endButtonLoading(element) {
+    element.style['pointer-events'] = ''
+    element.querySelector('#before_loading_text').style.display = 'block'
+    element.querySelector('#loading_dots').style.display = 'none'
+    element.querySelector('#loading_dots').style.margin = '0px'
+  }
+
+
+
+</script>
+
+<script>
+    
+function addListener(el, type, callbackFn, selector) {
+    el.addEventListener(type, e => {
+        const target = e.target.closest(selector);
+        if (target) callbackFn.call(target, e);
+    }, true);
+}
+
+
+    addListener(document, "click", async (e) => {
+        var element = e.target
+        if (element.querySelector('#before_loading_text') == null) {
+          element = element.closest("button")
+        }
+        const purchaser = element.getAttribute('purchaser')
+        console.log(purchaser)
+        buttonLoading(element)
+
+        let response = await fetch("/api/activate_license", {
+            "method": "POST",
+            "body": JSON.stringify({
+              'purchaser_name': purchaser
+            }),
+            cache: "no-cache",
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+          }).then((response) => response.json())
+          .then((data) => {
+              return data
+          })
+          .catch(err => {
+            Swal.fire({
+                  icon: 'error',
+                  title: `500 Error!`,
+                  text: "Our server had an issue processing your license activation request. Please contact an admin.",
+                  confirmButtonText: "OK",
+                  showCloseButton: true
+            })
+          })
+
+        if (response['response'] == 'Success') {
+          setTimeout(() => {
+              element.outerHTML = `${ response['license_activated'] == 'True' ? `
+                  <button class="btn btn-danger deactivate-license-button"  purchaser="${response['purchaser_name']}">
+                    <span id="before_loading_text"><i class="fa-solid fa-user-xmark"></i> &nbsp;Cancel License</span>
+                      <div id="loading_outer">
+                        <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                      </div>
+                  </button>
+                  ` : `
+                <button class="btn btn-primary activate-license-button" purchaser="${response['purchaser_name']}">
+                  <span id="before_loading_text"><i class="fa-solid fa-user-check"></i> &nbsp;Activate License</span>
+                  <div id="loading_outer">
+                    <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                  </div>
+                </button>
+
+                ` }`
+                let licenses_activated = parseInt(document.querySelector('#licenses_activated').textContent)
+                licenses_activated += 1
+                document.querySelector('#licenses_activated').textContent = licenses_activated
+            }, 400);
+            return
+        }
+
+        console.log('sdsdsdsdsdsd???')
+        endButtonLoading(element)
+        
+        if (response.error_message) {
+
+            Swal.fire({
+              icon: 'error',
+              title: `Issue Activating License!`,
+              text: response.error_message,
+              confirmButtonText: "OK",
+              showCloseButton: true
+          })
+
+        }
+
+
+    }, ".activate-license-button");
+
+    
+    // DEACTIVE LICENSE
+    addListener(document, "click", async (e) => {
+        var element = e.target
+        if (element.querySelector('#before_loading_text') == null) {
+          element = element.closest("button")
+        }
+        const purchaser = element.getAttribute('purchaser')
+        console.log(purchaser)
+        buttonLoading(element, "deactivate")
+
+        let response = await fetch("/api/deactivate_license", {
+            "method": "POST",
+            "body": JSON.stringify({
+              'purchaser_name': purchaser
+            }),
+            cache: "no-cache",
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+          }).then((response) => response.json())
+          .then((data) => {
+              return data
+          })
+          .catch(err => {
+            Swal.fire({
+                  icon: 'error',
+                  title: `500 Error!`,
+                  text: "Our server had an issue processing your license activation request. Please contact an admin.",
+                  confirmButtonText: "OK",
+                  showCloseButton: true
+            })
+          })
+
+          if (response['response'] == 'Success') {
+            setTimeout(() => {
+              console.log(response)
+              element.outerHTML = `${ response['license_activated'] == 'True' ? `
+                  <button class="btn btn-danger deactivate-license-button"  purchaser="${response['purchaser_name']}">
+                    <span id="before_loading_text"><i class="fa-solid fa-user-xmark"></i> &nbsp;Cancel License</span>
+                      <div id="loading_outer">
+                        <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                      </div>
+                  </button>
+                  ` : `
+                <button class="btn btn-primary activate-license-button" purchaser="${response['purchaser_name']}">
+                  <span id="before_loading_text"><i class="fa-solid fa-user-check"></i> &nbsp;Activate License</span>
+                  <div id="loading_outer">
+                    <div id="loading_dots" style="display: none;" class="dot-flashing"></div>
+                  </div>
+                </button>
+
+                ` }`
+                let licenses_activated = parseInt(document.querySelector('#licenses_activated').textContent)
+                licenses_activated -= 1
+                document.querySelector('#licenses_activated').textContent = licenses_activated
+            }, 400);
+            return
+        }
+
+
+        console.log('sdsdsdsdsdsd???')
+        if (response.error_message) {
+
+            Swal.fire({
+              icon: 'error',
+              title: `Issue Dectivating License!`,
+              text: response.error_message,
+              confirmButtonText: "OK",
+              showCloseButton: true
+          })
+
+        }
+
+
+    }, ".deactivate-license-button");
+
+</script>
+
+<script>
+  document.querySelector('#add_remove_licenses').addEventListener('click', async (e) => {
+
+    // const current_licenses = document.querySelector('#')
+
+    Swal.fire({
+      title: 'What would you like to do?',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Add Licenses',
+      denyButtonText: `Remove Licenses`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire('The app is in beta. Adding/removing licenses will be available in the full release.', '', 'insdsdfo')
+      } else if (result.isDenied) {
+        Swal.fire('The app is in beta. Adding/removing licenses will be available in the full release.', '', 'insdsdfo')
+      }
+    })
+
+  })
+</script>
+
+<script>
+  function instantiateCopyToClip() {
+    const links = document.querySelectorAll('.copy-click');
+      const cls = {
+        copied: 'is-copied',
+        hover: 'is-hovered' };
+
+
+      const copyToClipboard = (str, copyString) => {
+        const el = document.createElement('input');
+        console.log(str.text)
+        console.log(str.dataset)
+        console.log(str.dataset.copyString)
+        str.dataset.copyString ? el.value = str.dataset.copyString : el.value = copyString ? copyString : str.text;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.opacity = 0;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+      };
+
+      const clickInteraction = e => {
+        e.preventDefault();
+        const copyString = e.target.hasAttribute("copystring") ? e.target.getAttribute("copystring") : null
+        copyToClipboard(e.target, copyString);
+        e.target.classList.add(cls.copied);
+        setTimeout(() => e.target.classList.remove(cls.copied), 1000);
+        setTimeout(() => e.target.classList.remove(cls.hover), 700);
+      };
+
+      Array.from(links).forEach(link => {
+        link.addEventListener('click', e => clickInteraction(e));
+        link.addEventListener('keypress', e => {
+          if (e.keyCode === 13) clickInteraction(e);
+        });
+        link.addEventListener('mouseover', e => e.target.classList.add(cls.hover));
+        link.addEventListener('mouseleave', e => {
+          if (!e.target.classList.contains(cls.copied)) {
+            e.target.classList.remove(cls.hover);
+          }
+        });
+      });
+
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-46156385-1', 'cssscript.com');
+        ga('send', 'pageview');
+  }
+</script>
+
+<script>
+  
+  if (document.URL.includes('#new-user')) {
+    window.history.pushState("object or string", "Title", "/purchasers");
+    setTimeout(() => {
+        Swal.fire({
+          // icon: 'info',
+          iconHtml: '<img src="/static/assets/img/ticket-assistant-logo-svg.svg">',
+          customClass: {
+            icon: 'no-border'
+          },
+          title: `You're all set!`,
+          text: "To trial the app, add up to 5 purchasers, send them their activation codes to input in the browser extension pop up window, and activate their accounts.",
+          confirmButtonText: "I'm hyped.",
+          showCloseButton: true
+      })
+    }, 500);
+  }
+</script>
+
+
+<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+<style>
+body { font-family: 'Montserrat'; background-color: #ddd; }
+.container { margin: 150px auto; max-width: 640px; line-height: 1.7; font-size: 18px; }
+.copy-click {
+  position: relative;
+  padding-bottom: 2px;
+  text-decoration: none;
+  cursor: copy;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px dashed #767676;
+  transition: background-color calc(var(--duration) * 2) var(--ease);
+}
+
+
+.swal-p .copy-click {
+  color: #484848 !important;
+}
+
+.swal-p {
+  color: black;
+}
+
+.white-content .copy-click {
+  color: #484848 !important;
+}
+
+.copy-click:after {
+  content: attr(data-tooltip-text);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  padding: 8px 16px;
+  white-space: nowrap;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 0 -12px rgba(0, 0, 0, 0);
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  opacity: 0;
+  -webkit-transform: translate(-50%, 12px);
+          transform: translate(-50%, 12px);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), -webkit-transform calc(var(--duration) / 1.5) var(--bounce);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), transform calc(var(--duration) / 1.5) var(--bounce);
+  transition: box-shadow calc(var(--duration) / 1.5) var(--bounce), opacity calc(var(--duration) / 1.5) var(--bounce), transform calc(var(--duration) / 1.5) var(--bounce), -webkit-transform calc(var(--duration) / 1.5) var(--bounce);
+}
+.copy-click.is-hovered:after {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+  transition-timing-function: var(--ease);
+  z-index: 999999999999 !important;
+}
+.copy-click.is-copied {
+  background-color: #f7ec9cd9;
+}
+.copy-click.is-copied:after {
+  content: attr(data-tooltip-text-copied);
+}
+
+.white-content .copy-click {
+    color: white;
+}
+
+</style>
+
+{% endblock content %}
+
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+<style>
+  .no-border {
+    border-color: transparent;
+    /* color: #ffffff00; */
+  }
+</style>
+<script>
+  console.log('sd3243')
+    $(document).ready(function() {
+
+console.log('sdsdsds34324')
+
+if (document.URL.includes('#new-channel')) {
+  Swal.fire({
+      // icon: 'info',
+      iconHtml: '<img src="/static/assets/img/ticket-assistant-logo-svg.svg">',
+      customClass: {
+        icon: 'no-border'
+      },
+      title: `You're all set!`,
+      text: "You have 1,000 message credits for your free trial. Enjoy!",
+      confirmButtonText: "I'm hyped.",
+      showCloseButton: true
+  })
+}
+
+});
+</script>
+{% endblock javascripts %}
+

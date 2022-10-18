@@ -1,0 +1,254 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Register {% endblock title %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block bodyclass %}login{% endblock %}
+
+{% block content %}
+
+<style>
+  .eight-margin {
+    margin-bottom: 8px;
+  }
+  .outsize-icons {
+    margin-right: 40px !important;
+}
+.info-horizontal .icon {
+    float: left;
+    margin-top: 47px;
+    margin-right: 10px;
+}
+
+.discord-icon {
+  background-color: #5865f2 !important;
+}
+
+.icon.icon-discord {
+    color: #5865f2;
+}
+</style>
+
+  <div class="row">
+    <div class="col-md-5 ml-auto">
+      <div class="info-area info-horizontal mt-5">
+        <div class="icon outsize-icons icon-discord" style="margin-right: 33px !important;">
+          <i class="fa-brands fa-discord"></i>
+        </div>
+        <div class="description">
+          <h3 class="info-title eight-margin">Instantly Receive Ticket Details</h3>
+          <p class="description">
+            When your purchaser enters a checkout page, all relevant event and ticket details will be sent directly to your own private discord channel.
+          </p>
+        </div>
+      </div>
+      <div class="info-area info-horizontal">
+        <div class="icon outsize-icons icon-primary" style="margin-top: 80px;">
+          <i class="fa-brands fa-chrome"></i>
+        </div>
+        <div class="description">
+          <h3 class="info-title eight-margin" style="margin-top:20px;">Send Decisions Directly To Your Purchaser's Browsers</h3>
+          <p class="description">
+              Make communication easy by clicking buttons to send yes / no responses directly to your purchasers' checkout window via our browser extension.
+          </p>
+        </div>
+      </div>
+      <div class="info-area info-horizontal">
+        <div class="icon outsize-icons icon-warning" style="margin-right: 36px !important;">
+          <i class="fa-solid fa-ticket"></i>
+        </div>
+        <div class="description">
+          <h3 class="info-title eight-margin" style="margin-top:30px;">Better Purchases, More of Them</h3>
+          <p class="description">
+            Make sure your purchasers buy the best tickets. Never miss a ticket and save tons of time.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7 mr-auto">
+      <div class="card card-register card-white">
+        
+        <div class="card-header">
+          <img class="card-img" src="/static/assets/img/card-primary.png" alt="Card image">
+          <h4 class="card-title">Register</h4>
+        </div>
+
+        <form role="form" method="post" action="">
+
+          {{ form.hidden_tag() }}                    
+
+          <div class="card-body">
+
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="tim-icons icon-single-02"></i>
+                </div>
+              </div>
+              {{ form.username(placeholder="Username", class="form-control") }}
+            </div>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="tim-icons icon-email-85"></i>
+                </div>
+              </div>
+              {{ form.email(placeholder="Email", class="form-control") }}
+            </div>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="tim-icons icon-lock-circle"></i>
+                </div>
+              </div>
+              {{ form.password(placeholder="Password", class="form-control", type="password") }}
+            </div>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="tim-icons icon-lock-circle"></i>
+                </div>
+              </div>
+              {{ form.access_code(placeholder="Access Code", class="form-control") }}
+            </div>
+
+          </div>
+          <div class="card-footer">
+            <div class="text-left">
+
+              {% if msg %}
+                <span class="text-danger">{{ msg | safe }}</span>
+              {% endif %}
+              <br />
+
+              <button type="submit" name="register" class="btn btn-primary my-4">Register</button>
+              &nbsp;&nbsp; Have an account? <a href="/login" >Login</a>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+    
+  <script>
+    $(document).ready(function() {
+      $().ready(function() {
+        $sidebar = $('.sidebar');
+        $navbar = $('.navbar');
+        $main_panel = $('.main-panel');
+
+        $full_page = $('.full-page');
+
+        $sidebar_responsive = $('body > .navbar-collapse');
+        sidebar_mini_active = true;
+        white_color = false;
+
+        window_width = $(window).width();
+
+        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+
+
+        $('.fixed-plugin a').click(function(event) {
+          if ($(this).hasClass('switch-trigger')) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            } else if (window.event) {
+              window.event.cancelBubble = true;
+            }
+          }
+        });
+
+        $('.fixed-plugin .background-color span').click(function() {
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data', new_color);
+          }
+
+          if ($main_panel.length != 0) {
+            $main_panel.attr('data', new_color);
+          }
+
+          if ($full_page.length != 0) {
+            $full_page.attr('filter-color', new_color);
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.attr('data', new_color);
+          }
+        });
+
+        $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function() {
+          var $btn = $(this);
+
+          if (sidebar_mini_active == true) {
+            $('body').removeClass('sidebar-mini');
+            sidebar_mini_active = false;
+            blackDashboard.showSidebarMessage('Sidebar mini deactivated...');
+          } else {
+            $('body').addClass('sidebar-mini');
+            sidebar_mini_active = true;
+            blackDashboard.showSidebarMessage('Sidebar mini activated...');
+          }
+
+          // we simulate the window Resize so the charts will get updated in realtime.
+          var simulateWindowResize = setInterval(function() {
+            window.dispatchEvent(new Event('resize'));
+          }, 180);
+
+          // we stop the simulation of Window Resize after the animations are completed
+          setTimeout(function() {
+            clearInterval(simulateWindowResize);
+          }, 1000);
+        });
+
+        $('.switch-change-color input').on("switchChange.bootstrapSwitch", function() {
+          var $btn = $(this);
+
+          if (white_color == true) {
+
+            $('body').addClass('change-background');
+            setTimeout(function() {
+              $('body').removeClass('change-background');
+              $('body').removeClass('white-content');
+            }, 900);
+            white_color = false;
+          } else {
+
+            $('body').addClass('change-background');
+            setTimeout(function() {
+              $('body').removeClass('change-background');
+              $('body').addClass('white-content');
+            }, 900);
+
+            white_color = true;
+          }
+
+
+        });
+
+        $('.light-badge').click(function() {
+          $('body').addClass('white-content');
+        });
+
+        $('.dark-badge').click(function() {
+          $('body').removeClass('white-content');
+        });
+      });
+    });
+  </script>
+    
+{% endblock javascripts %}
