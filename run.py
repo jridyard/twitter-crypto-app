@@ -12,7 +12,6 @@ from app import create_app, db
 from app import extensions
 
 from flask_apscheduler import APScheduler
-from app.home.automatic_tasks import *
 
 # WARNING: Don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
@@ -52,6 +51,8 @@ def configure_celery(app):
 
 celery = configure_celery(app)
 app.app_context().push()
+
+from app.home.automatic_tasks import *
 
 if __name__ == "__main__":
     scheduler.add_job(id = 'Scheduled Task', func=scheduleTask, trigger="interval", minutes=5)
