@@ -38,6 +38,15 @@ import tweepy
 from datetime import datetime, timedelta
 
 from app.home.twitter_api import *
+from app.home.update_stats import *
 
 def getTimeStamp(time):
     return int(datetime.timestamp(time))
+
+def schemaToJSON(schemaClass, data_to_load):
+    data_array = schemaClass.dump(data_to_load, many=True)['data']
+    actual_result = []
+    for item in data_array:
+        item['attributes']['internal_id'] = item['id']
+        actual_result.append(item['attributes'])
+    return actual_result

@@ -97,14 +97,15 @@ def adjustInfluencerStats(user_id, prices):
     four_h_performance =    getPriceChange( original_price, prices["4"])
     twelve_h_performance =  getPriceChange( original_price, prices["12"])
     day_performance =       getPriceChange( original_price, prices["24"])
+
     
     influencer.tokens_tweeted += 1
-    influencer.average_h_performance =        (influencer.average_h_performance + h_performance) / influencer.tokens_tweeted
-    influencer.average_two_h_performance =    (influencer.average_two_h_performance + two_h_performance) / influencer.tokens_tweeted
-    influencer.average_three_h_performance =  (influencer.average_three_h_performance + three_h_performance) / influencer.tokens_tweeted
-    influencer.average_four_h_performance =   (influencer.average_four_h_performance + four_h_performance) / influencer.tokens_tweeted
-    influencer.average_twelve_h_performance = (influencer.average_twelve_h_performance + twelve_h_performance) / influencer.tokens_tweeted
-    influencer.average_day_performance =      (influencer.average_day_performance + day_performance) / influencer.tokens_tweeted
+    influencer.average_h_performance =        round((influencer.average_h_performance + h_performance) / influencer.tokens_tweeted, 2)
+    influencer.average_two_h_performance =    round((influencer.average_two_h_performance + two_h_performance) / influencer.tokens_tweeted, 2)
+    influencer.average_three_h_performance =  round((influencer.average_three_h_performance + three_h_performance) / influencer.tokens_tweeted, 2)
+    influencer.average_four_h_performance =   round((influencer.average_four_h_performance + four_h_performance) / influencer.tokens_tweeted, 2)
+    influencer.average_twelve_h_performance = round((influencer.average_twelve_h_performance + twelve_h_performance) / influencer.tokens_tweeted, 2)
+    influencer.average_day_performance =      round((influencer.average_day_performance + day_performance) / influencer.tokens_tweeted, 2)
 
 def setFirstStat(user_id, prices):
     influencer = Follower.query.filter(Follower.user_id==user_id).first()
@@ -153,7 +154,6 @@ def update_influencers():
 
 
 def scheduleTask():
-    print("I AM A SCHEDULED TASK\n" * 15)
     try:
         with app.app_context():
             tweets_to_collect = Tweet.query.filter(Tweet.token_price_collection_complete==False).all()
@@ -174,12 +174,14 @@ def scheduleTask():
                     tweets_to_update.append(tweet)
 
             if len(information_to_collect) > 0:
-                GET_PRICE_BARS_LAMBDA_URL = "https://24apwohq76klnuvisso2hiyzxa0bcvzv.lambda-url.us-west-2.on.aws/"
+                GET_PRICE_BARS_LAMBDA_URL = "https://kmlkbz2ezqvfujkgvuknwg3pqq0zcvgy.lambda-url.us-west-2.on.aws/"
                 payload = json.dumps({
                     "tokens": information_to_collect,
                     "authorization": "1c9052e6-1eg4-4d68-98a2-2bff5f2ec095"
                 })
-                headers = { 'Content-Type': 'text/plain' }
+                headers = {
+                    'Content-Type': 'text/plain'
+                }
                 response = requests.request("POST", GET_PRICE_BARS_LAMBDA_URL, headers=headers, data=payload)
                 token_details = json.loads(response.text)
 

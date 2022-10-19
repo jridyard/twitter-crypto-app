@@ -50,11 +50,6 @@ def tweets():
 
     return render_template('crypto/tweets.html', segment='tweets')
 
-# @blueprint.route('/tokens')
-# @login_required
-# def tokens():
-#     return render_template('crypto/tokens.html', segment='tokens')
-
 
 ### GET FOLLOWERS ###
 @blueprint.route('/api/get_followers', methods=["GET", "POST"])
@@ -83,6 +78,71 @@ def get_followers():
     return make_response(jsonify({
         'follower_list': follower_list
     }), 200)
+
+
+
+
+
+
+### GET TWEETS AWAITING TOKEN PRICE DATA ###
+@blueprint.route('/api/tokens_awaiting_price_data', methods=["GET", "POST"])
+@cross_origin()
+def tokens_awaiting_price_data():
+    tweets = Tweet.query.filter(Tweet.token_price_collection_complete==False)
+    result = schemaToJSON(TweetSchema(), tweets)
+    return make_response(jsonify(result), 200)
+
+### GET TWEETS AWAITING TOKEN PRICE DATA ###
+@blueprint.route('/api/update_prices', methods=["GET", "POST"])
+@cross_origin()
+def update_prices():
+    json = request.get_json()['data_to_update']
+
+    mappings_to_update = []
+    for key in json:
+        id = key
+        prices = json[key]
+        mappings_to_update.append({
+            'token_price_collection_complete': True,
+            'prices': prices,
+            'id': int(id)
+        })
+        
+    db.session.bulk_update_mappings(Tweet, mappings_to_update)
+    db.session.commit()
+    return make_response(jsonify({
+        'response': 'ok'
+    }), 200)
+
+# TODO: add bulk updatemappings call for updating each influencers avg performance stats
+# implement the endpoint in the twc_stream directory or w/e
+# ... then do the same thing for updating the once per 24h influencer update stuff
+
+
+### UPDATE INFLUENCER STATS ###
+@blueprint.route('/api/update_influencer_stats', methods=["GET", "POST"])
+@cross_origin()
+def update_influencer_stats():
+    details_to_update = request.get_json()['data_to_update']
+
+    for details in details_to_update:
+        user_id = details['user_id']
+        prices = details['prices']
+        print(user_id)
+        print(prices)
+
+        adjustInfluencerStats(user_id, prices)
+
+    db.session.commit()
+
+    return make_response(jsonify({
+        'response': 'ok'
+    }), 200)
+
+
+
+
+
 
 ### ADD INFLUENCERS ###
 @blueprint.route('/api/add_influencer', methods=["GET", "POST"])

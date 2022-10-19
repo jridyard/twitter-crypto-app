@@ -16,6 +16,11 @@ from app.base.util import hash_pass
 # Other modules
 from datetime import datetime
 
+from marshmallow import validate
+from marshmallow_jsonapi import Schema, fields
+
+NOT_BLANK = validate.Length(min=1, error='Field cannot be blank')
+
 class User(db.Model, UserMixin):
 
     __tablename__ = 'user'
@@ -78,11 +83,11 @@ class NewTweetCheck(db.Model):
 class Follower(db.Model):
     __tablename__ = 'follower'
 
-    id                  = Column(Integer, primary_key=True)
+    id                  = Column(Integer)
+    user_id             = Column(String(255), unique=True, primary_key=True )
     date_followed       = Column(DateTime(timezone=True), unique=False, default=datetime.now())
     name                = Column(String(255), unique=False)
     follower_count      = Column(Integer,     unique=False)
-    user_id             = Column(String(255), unique=True )
     screen_name         = Column(String(255), unique=False)
     profile_banner_url  = Column(String(),    unique=False)
     profile_image_url   = Column(String(),    unique=False)
@@ -95,9 +100,6 @@ class Follower(db.Model):
     average_four_h_performance = Column(Float(),    unique=False)
     average_twelve_h_performance = Column(Float(),  unique=False)
     average_day_performance = Column(Float(),       unique=False)
-
-
-
 
 class Tweet(db.Model):
     __tablename__ = 'tweet'
@@ -117,6 +119,25 @@ class Tweet(db.Model):
     }) # filled out with hourly prices => {1: 2.78, 2: 3.23, 3: 2.82, ... 24: 5.53}
     token_price_collection_complete = Column(Boolean, unique=False)
     collection_attempts = Column(Integer, unique=False, default=0)
+
+
+
+
+### JSON SCHEMAS ###
+
+class TweetSchema(Schema):
+    # Validation for the different fields
+    id                  = fields.Integer(validate=NOT_BLANK)
+    tweet_id            = fields.String(validate=NOT_BLANK)
+    pair_id             = fields.String(validate=NOT_BLANK)
+    datetime            = fields.DateTime(validate=NOT_BLANK)
+    user_id             = fields.String(validate=NOT_BLANK)
+
+    class Meta:
+        type_ = 'tweet'
+
+### JSON SCHEMAS ###
+
 
 
 

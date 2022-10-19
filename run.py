@@ -11,7 +11,7 @@ from config import config_dict
 from app import create_app, db
 from app import extensions
 
-from flask_apscheduler import APScheduler
+# from flask_apscheduler import APScheduler
 
 # WARNING: Don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
@@ -31,7 +31,7 @@ except KeyError:
     exit('Error: Invalid <config_mode>. Expected values [Debug, Production] ')
 
 app = create_app( app_config )
-scheduler = APScheduler()
+# scheduler = APScheduler()
 Migrate(app, db)
 
 if DEBUG:
@@ -52,10 +52,10 @@ def configure_celery(app):
 celery = configure_celery(app)
 app.app_context().push()
 
-from app.home.automatic_tasks import *
+# from app.home.automatic_tasks import *
 
 if __name__ == "__main__":
-    scheduler.add_job(id = 'Scheduled Task', func=scheduleTask, trigger="interval", minutes=5)
-    scheduler.add_job(id = 'Update Influencers', func=update_influencers, trigger="interval", days=1)
-    scheduler.start()
-    app.run(host="0.0.0.0", port="5000", use_reloader=False)
+    # scheduler.add_job(id = 'Scheduled Task', func=scheduleTask, trigger="interval", seconds=10)
+    # scheduler.add_job(id = 'Update Influencers', func=update_influencers, trigger="interval", days=1)
+    # scheduler.start()
+    app.run(host="0.0.0.0", port="5000") # , use_reloader=False ... if we want to use tasks again in the future
