@@ -257,7 +257,7 @@ def add_tweet():
         name=screen_name,
         user_id=tweet_data['user_id'],
         tweet=tweet_data['text'],
-        datetime=datetime.now(),
+        datetime=datetime.utcnow(),
         token=tweet_data['token'], # token_id *thats what token actually is.
         price_at_tweet=tweet_data['price'],
         pair_id=tweet_data['pair_id'],

@@ -85,7 +85,7 @@ class Follower(db.Model):
 
     id                  = Column(Integer)
     user_id             = Column(String(255), unique=True, primary_key=True )
-    date_followed       = Column(DateTime(timezone=True), unique=False, default=datetime.now())
+    date_followed       = Column(DateTime(timezone=True), unique=False, default=datetime.utcnow())
     name                = Column(String(255), unique=False)
     follower_count      = Column(Integer,     unique=False)
     screen_name         = Column(String(255), unique=False)

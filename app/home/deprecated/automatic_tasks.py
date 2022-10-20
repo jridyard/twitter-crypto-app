@@ -22,7 +22,7 @@ def daySinceTweeted(created_at):
     # datetimed = datetime.strptime(created_at, '%Y-%m-%d %H:%M:%S.%f')
 
     data1 = created_at
-    data2 = datetime.now()
+    data2 = datetime.utcnow()
 
     diff = data2 - data1
 
