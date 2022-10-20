@@ -128,8 +128,6 @@ def update_influencer_stats():
     for details in details_to_update:
         user_id = details['user_id']
         prices = details['prices']
-        print(user_id)
-        print(prices)
 
         adjustInfluencerStats(user_id, prices)
 
@@ -139,7 +137,33 @@ def update_influencer_stats():
         'response': 'ok'
     }), 200)
 
+### UPDATE INFLUENCER STATS ###
+@blueprint.route('/api/get_influencers', methods=["GET", "POST"])
+@cross_origin()
+def get_influencers():
+    influencers = Follower.query.all()
+    result = schemaToJSON(FollowerSchema(), influencers)
+    return make_response(jsonify(result), 200)
 
+@blueprint.route('/api/update_influencer_info', methods=["GET", "POST"])
+@cross_origin()
+def update_influencer_info():
+    influencers = request.get_json()['data_to_update']
+
+    mappings_to_update = []
+    for influencer in influencers:
+        user_id = influencer['user_id']
+        follower_count = influencer['follower_count']
+        mappings_to_update.append({
+            'follower_count': follower_count,
+            'user_id': str(user_id)
+        })
+        
+    db.session.bulk_update_mappings(Follower, mappings_to_update)
+    db.session.commit()
+    return make_response(jsonify({
+        'response': 'ok'
+    }), 200)
 
 
 

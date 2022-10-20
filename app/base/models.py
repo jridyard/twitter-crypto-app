@@ -136,6 +136,14 @@ class TweetSchema(Schema):
     class Meta:
         type_ = 'tweet'
 
+class FollowerSchema(Schema):
+    # Validation for the different fields
+    id                  = fields.Integer(validate=NOT_BLANK)
+    user_id             = fields.String(validate=NOT_BLANK)
+
+    class Meta:
+        type_ = 'tweet'
+
 ### JSON SCHEMAS ###
 
 
