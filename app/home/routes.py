@@ -88,7 +88,7 @@ def get_followers():
 @blueprint.route('/api/tokens_awaiting_price_data', methods=["GET", "POST"])
 @cross_origin()
 def tokens_awaiting_price_data():
-    tweets = Tweet.query.filter(Tweet.token_price_collection_complete==False)
+    tweets = Tweet.query.filter(Tweet.token_price_collection_complete==False).all()
     result = schemaToJSON(TweetSchema(), tweets)
     return make_response(jsonify(result), 200)
 
